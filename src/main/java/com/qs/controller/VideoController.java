@@ -167,7 +167,7 @@ public class VideoController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "all")
+    @RequestMapping(value = "/all")
     public ResultInfo findAll(
             HttpServletRequest request,
             @RequestParam(value = "query", required = false) VideoForm videoForm){
@@ -195,10 +195,9 @@ public class VideoController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "decode")
+    @RequestMapping(value = "/decode")
     public ResultInfo videoDecode(
-            HttpServletRequest request,
-            @RequestParam(value = "form") DecodeForm decodeForm){
+            HttpServletRequest request, DecodeForm decodeForm){
         ResultInfo resultInfo = ResultInfo.getInstance("0", "视频解码转码成功");
         try{
             DecodeInfo decodeInfo = videoService.decodeVideo(decodeForm);

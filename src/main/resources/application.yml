@@ -4,6 +4,8 @@ server:
     filepath: E:/video/demos/
   visit:
     path: /file/
+  ffmpeg:
+    path: E:/video/ffmpeg/bin/ffmpeg.exe
 
 
 spring:

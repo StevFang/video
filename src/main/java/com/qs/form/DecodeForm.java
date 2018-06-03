@@ -16,14 +16,31 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DecodeForm {
 
+    // 视频资源id
     private String videoId;
 
-    // 目标编码
-    private String targetCode;
+    // 视频源
+    private String input;
 
-    // 是否查看进度
-    private String showProgress;
+    // 输出源
+    private String output;
 
-    // 是否增加水印
+    // 应用名
+    private String appName;
+
+    // 0-推一个元码流；1-推一个自定义推流；2-推两个流（一个是自定义，一个是元码）
+    private String twoPart;
+
+    // 解码类型  默认h264解码
+    private String codec;
+
+    // 转换格式，默认flv
+    private String fmt;
+
+    // -r :帧率，默认25；-g :帧间隔
+    private String fps;
+
+    // -s 分辨率 默认是原分辨率
+    private String rs;
 
 }

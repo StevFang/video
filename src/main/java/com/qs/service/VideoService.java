@@ -1,15 +1,19 @@
 package com.qs.service;
 
 import com.qs.common.UploadResult;
+import com.qs.config.FFmpegConfig;
 import com.qs.form.DecodeForm;
 import com.qs.form.DecodeInfo;
 import com.qs.form.VideoForm;
+import com.qs.manager.FFmpegManager;
 import com.qs.utils.ConvertUtil;
 import com.qs.ws.ResultInfo;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +45,13 @@ public class VideoService {
 
     @Value("${server.visit.path}")
     private String visitPath;
+
+    @Value("${server.ffmpeg.path}")
+    private String ffmpegPath;
+
+    @Autowired
+    private FFmpegManager ffMpegManager;
+
     /**
      * 处理视频上传实现
      * @param request
@@ -187,7 +198,21 @@ public class VideoService {
      * @return
      */
     public DecodeInfo decodeVideo(DecodeForm decodeForm) {
+        FFmpegConfig ffmpegConfig = FFmpegConfig.getInstanceOf(decodeForm, ffmpegPath);
 
-        return null;
+        // ffmpeg环境是否配置正确
+        if (ffmpegConfig == null) {
+            logger.error("配置未正确加载，无法执行");
+            return new DecodeInfo(decodeForm.getVideoId(), "配置未正确加载，无法执行");
+        }
+        // 参数是否符合要求
+        if (StringUtils.isBlank(ffmpegConfig.getAppName())) {
+            logger.error("参数不正确，无法执行");
+            return new DecodeInfo(decodeForm.getVideoId(), "参数不正确，无法执行");
+        }
+
+        ffMpegManager.start(ffmpegConfig, decodeForm.getVideoId());
+
+        return new DecodeInfo(decodeForm.getVideoId(), "正在处理中，请稍后");
     }
 }
