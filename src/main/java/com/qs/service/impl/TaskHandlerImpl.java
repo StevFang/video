@@ -1,6 +1,8 @@
-package com.qs.service;
+package com.qs.service.impl;
 
-import com.qs.entity.TaskEntity;
+import com.qs.model.TaskModel;
+import com.qs.service.OutHandlerMethod;
+import com.qs.service.TaskHandler;
 import com.qs.threads.OutHandler;
 import org.springframework.stereotype.Component;
 
@@ -24,18 +26,18 @@ public class TaskHandlerImpl implements TaskHandler {
     private OutHandlerMethod ohm;
 
     @Override
-    public TaskEntity process(String id, String command) {
+    public TaskModel process(String appName, String command) {
         Process process = null;
         OutHandler outHandler = null;
-        TaskEntity tasker = null;
+        TaskModel tasker = null;
         try {
             if (runtime == null) {
                 runtime = Runtime.getRuntime();
             }
             process = runtime.exec(command);// 执行本地命令获取任务主进程
-            outHandler = new OutHandler(process.getErrorStream(), id, ohm);
+            outHandler = new OutHandler(process.getErrorStream(), appName, ohm);
             outHandler.start();
-            tasker = new TaskEntity(id, process, outHandler);
+            tasker = new TaskModel(appName, process, outHandler);
         } catch (IOException e) {
             stop(outHandler);
             stop(process);

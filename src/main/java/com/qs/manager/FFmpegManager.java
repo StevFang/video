@@ -1,7 +1,7 @@
 package com.qs.manager;
 
 import com.qs.config.FFmpegConfig;
-import com.qs.entity.TaskEntity;
+import com.qs.model.TaskModel;
 
 import java.util.Collection;
 
@@ -33,11 +33,11 @@ public interface FFmpegManager {
 	/**
 	 * 通过组装命令发布任务
 	 * 
-	 * @param ffmpegConfig -组装命令所需配置
+	 * @param fFmpegConfig -组装命令所需配置
 	 *
 	 * @return
 	 */
-	String start(FFmpegConfig ffmpegConfig, String id);
+	String start(FFmpegConfig fFmpegConfig);
 	
 	/**
 	 * 停止任务
@@ -59,11 +59,11 @@ public interface FFmpegManager {
 	 * 
 	 * @param id
 	 */
-	TaskEntity query(String id);
+	TaskModel query(String id);
 
 	/**
 	 * 查询全部任务信息
 	 * 
 	 */
-	Collection<TaskEntity> queryAll();
+	Collection<TaskModel> queryAll();
 }

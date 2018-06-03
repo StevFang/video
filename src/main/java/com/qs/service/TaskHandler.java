@@ -1,6 +1,6 @@
 package com.qs.service;
 
-import com.qs.entity.TaskEntity;
+import com.qs.model.TaskModel;
 
 /**
  * 任务执行接口
@@ -10,11 +10,11 @@ public interface TaskHandler {
 	/**
 	 * 按照命令执行主进程和输出线程
 	 * 
-	 * @param id
+	 * @param appName
 	 * @param command
 	 * @return
 	 */
-	TaskEntity process(String id, String command);
+	TaskModel process(String appName, String command);
 
 	/**
 	 * 停止主进程（停止主进程需要保证输出线程已经关闭，否则输出线程会出错）

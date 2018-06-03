@@ -6,6 +6,8 @@ server:
     path: /file/
   ffmpeg:
     path: E:/video/ffmpeg/bin/ffmpeg.exe
+  memcoder:
+    path: E:/video/ffmpeg/bin/memcoder.exe
 
 
 spring:

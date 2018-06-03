@@ -16,31 +16,31 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DecodeForm {
 
-    // 视频资源id
+    // 标识源视频
     private String videoId;
 
-    // 视频源
-    private String input;
-
-    // 输出源
-    private String output;
-
-    // 应用名
+    // 源视频名称
     private String appName;
 
-    // 0-推一个元码流；1-推一个自定义推流；2-推两个流（一个是自定义，一个是元码）
-    private String twoPart;
+    // 源视频的绝对路径
+    private String sourcePath;
 
-    // 解码类型  默认h264解码
-    private String codec;
-
-    // 转换格式，默认flv
+    // 目标视频类型
     private String fmt;
 
-    // -r :帧率，默认25；-g :帧间隔
+    // -ab bitrate 音频码率
+    private String bitrate;
+
+    // -ar freq 设置音频采样率
+    private String freq;
+
+    // -qscale <数值> 以<数值>质量为基础的VBR，取值0.01-255，约小质量越好
+    private String qscale;
+
+    // -r 29.97 帧速率（可以改，确认非标准桢率会导致音画不同步，所以只能设定为15或者29.97）
     private String fps;
 
-    // -s 分辨率 默认是原分辨率
+    // -s 320x240 指定分辨率
     private String rs;
 
 }

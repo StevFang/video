@@ -9,5 +9,5 @@ public interface OutHandlerMethod {
 	 * @param msg
 	 * @param msg 
 	 */
-	public void parse(String id, String msg);
+	void parse(String appName, String msg);
 }

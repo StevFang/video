@@ -1,5 +1,6 @@
-package com.qs.service;
+package com.qs.service.impl;
 
+import com.qs.service.OutHandlerMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @author fbin
  */
 @Component("defaultOutHandlerMethod")
-public class DefaultOutHandlerMethod implements OutHandlerMethod{
+public class DefaultOutHandlerMethod implements OutHandlerMethod {
 
 	/**
 	 * 记录日志
@@ -17,14 +18,14 @@ public class DefaultOutHandlerMethod implements OutHandlerMethod{
 	private static Logger logger = LoggerFactory.getLogger(DefaultOutHandlerMethod.class);
 
 	@Override
-	public void parse(String id, String msg) {
+	public void parse(String appName, String msg) {
 		//过滤消息
 		if (msg.indexOf("[rtsp") != -1) {
-			logger.error("id=" + id + " " + "发生网络异常丢包，消息体：" + msg);
+			logger.error("appName=" + appName + " 发生网络异常丢包，消息体：" + msg);
 		}else if(msg.indexOf("frame=")!=-1){
-			logger.error("id=" + id + " " + ":" + msg);
+			logger.error("appName=" + appName + " :" + msg);
 		}else{
-			logger.info("id=" + id + " " + ":" + msg);
+			logger.info("appName=" + appName + " :" + msg);
 		}
 	}
 }

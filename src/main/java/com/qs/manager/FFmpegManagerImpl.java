@@ -1,8 +1,10 @@
 package com.qs.manager;
 
 import com.qs.config.FFmpegConfig;
+import com.qs.config.FFmpegDecodeConfig;
+import com.qs.config.FFmpegOnlineConfig;
 import com.qs.dao.TaskDao;
-import com.qs.entity.TaskEntity;
+import com.qs.model.TaskModel;
 import com.qs.service.CommandService;
 import com.qs.service.TaskHandler;
 import org.apache.commons.lang.StringUtils;
@@ -11,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -42,22 +45,31 @@ public class FFmpegManagerImpl implements FFmpegManager {
 	private TaskHandler taskHandler;
 
 	/**
-	 * 创建ffmpeg指令
+	 * ffmpeg 直播推流服务
 	 */
-	@Autowired
-	private CommandService ffmpegCommandService;
+	@Resource(name = "ffmpegOnlineCommandService")
+	private CommandService ffmpegOnlineCommandService;
 
-	private FFmpegConfig ffmpegConfig = null;
+	/**
+	 * ffmpeg 视频转码服务
+	 */
+	@Resource(name = "ffmpegDecodeCommandService")
+	private CommandService ffmpegDecodeCommandService;
+
+	private FFmpegOnlineConfig ffmpegOnlineConfig = null;
+
+	private FFmpegDecodeConfig ffmpegDecodeConfig = null;
 
 	@Override
-	public String start(String id, String command) {
-		return start(id, command, false);
+	public String start(String appName, String command) {
+		return start(appName, command, false);
 	}
 
 	@Override
-	public String start(String id, String command, boolean hasPath) {
-		if (id != null && command != null) {
-			TaskEntity task = taskHandler.process(id, hasPath ? command : ffmpegConfig.getFfmpegPath() + command);
+	public String start(String appName, String command, boolean hasPath) {
+		logger.info("command= "+ command);
+		if (appName != null && command != null) {
+			TaskModel task = taskHandler.process(appName, hasPath ? command : ffmpegOnlineConfig.getFfmpegPath() + command);
 			if (task != null) {
 				int ret = taskDao.add(task);
 				if (ret > 0) {
@@ -72,14 +84,24 @@ public class FFmpegManagerImpl implements FFmpegManager {
 	}
 
 	@Override
-	public String start(FFmpegConfig ffmpegConfig, String id) {
+	public String start(FFmpegConfig fFmpegConfig) {
 
-		this.ffmpegConfig = ffmpegConfig;
+		String commandLine = null;
 
-		String commandLine = ffmpegCommandService.createCommand(ffmpegConfig);
-
-		if (StringUtils.isNotBlank(commandLine)) {
-			return start(id, commandLine, true);
+		if(fFmpegConfig instanceof FFmpegOnlineConfig){
+			// 直播配置
+			this.ffmpegOnlineConfig = (FFmpegOnlineConfig) fFmpegConfig;
+			commandLine = ffmpegOnlineCommandService.createCommand(ffmpegOnlineConfig);
+			if (StringUtils.isNotBlank(commandLine)) {
+				return start(ffmpegOnlineConfig.getAppName(), commandLine, true);
+			}
+		}else if(fFmpegConfig instanceof FFmpegDecodeConfig){
+			// 转码配置
+			this.ffmpegDecodeConfig = (FFmpegDecodeConfig) fFmpegConfig;
+			commandLine = ffmpegDecodeCommandService.createCommand(ffmpegDecodeConfig);
+			if (StringUtils.isNotBlank(commandLine)) {
+				return start(ffmpegDecodeConfig.getAppName(), commandLine, true);
+			}
 		}
 
 		return null;
@@ -88,7 +110,7 @@ public class FFmpegManagerImpl implements FFmpegManager {
 	@Override
 	public boolean stop(String id) {
 		if (id != null && taskDao.isHave(id)) {
-			TaskEntity task = taskDao.get(id);
+			TaskModel task = taskDao.get(id);
 			if (taskHandler.stop(task.getProcess(), task.getThread())) {
 				taskDao.remove(id);
 				return true;
@@ -100,9 +122,9 @@ public class FFmpegManagerImpl implements FFmpegManager {
 
 	@Override
 	public int stopAll() {
-		Collection<TaskEntity> list = taskDao.getAll();
-		Iterator<TaskEntity> iter = list.iterator();
-		TaskEntity tasker = null;
+		Collection<TaskModel> list = taskDao.getAll();
+		Iterator<TaskModel> iter = list.iterator();
+		TaskModel tasker = null;
 		int index = 0;
 		while (iter.hasNext()) {
 			tasker = iter.next();
@@ -115,12 +137,12 @@ public class FFmpegManagerImpl implements FFmpegManager {
 	}
 
 	@Override
-	public TaskEntity query(String id) {
+	public TaskModel query(String id) {
 		return taskDao.get(id);
 	}
 
 	@Override
-	public Collection<TaskEntity> queryAll() {
+	public Collection<TaskModel> queryAll() {
 		return taskDao.getAll();
 	}
 }

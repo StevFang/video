@@ -1,33 +1,33 @@
-package com.qs.service;
+package com.qs.service.impl;
 
-import com.qs.config.FFmpegConfig;
+import com.qs.config.FFmpegOnlineConfig;
+import com.qs.service.CommandService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * 创建ffmpeg指令
- * @return 组装好的命令
+ * 创建ffmpeg 直播推流 指令
  */
-@Component("ffmpegCommandService")
-public class FFmpegCommandServiceImpl implements CommandService<FFmpegConfig> {
+@Component("ffmpegOnlineCommandService")
+public class FFmpegOnlineCommandServiceImpl implements CommandService<FFmpegOnlineConfig> {
 
-    private static Logger logger = LoggerFactory.getLogger(FFmpegCommandServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(FFmpegOnlineCommandServiceImpl.class);
 
     @Override
-    public String createCommand(FFmpegConfig ffmpegConfig) {
+    public String createCommand(FFmpegOnlineConfig ffmpegOnlineConfig) {
         try{
-            String ffmpegPath = ffmpegConfig.getFfmpegPath();
+            String ffmpegPath = ffmpegOnlineConfig.getFfmpegPath();
             if(StringUtils.isNotBlank(ffmpegPath)) {
                 // -i：输入流地址或者文件绝对地址
                 StringBuilder command = new StringBuilder(ffmpegPath).append(" -i ");
                 // 是否有必输项：输入地址，输出地址，应用名，twoPart：0-推一个元码流；1-推一个自定义推流；2-推两个流（一个是自定义，一个是元码）
-                String input = ffmpegConfig.getInput();
-                String output = ffmpegConfig.getOutput();
-                String appName = ffmpegConfig.getAppName();
-                String twoPart = ffmpegConfig.getTwoPart();
-                String codec = ffmpegConfig.getCodec();
+                String input = ffmpegOnlineConfig.getInput();
+                String output = ffmpegOnlineConfig.getOutput();
+                String appName = ffmpegOnlineConfig.getAppName();
+                String twoPart = ffmpegOnlineConfig.getTwoPart();
+                String codec = ffmpegOnlineConfig.getCodec();
 
                 // 默认h264解码
                 codec = codec == null ? "h264" : codec;
@@ -40,18 +40,18 @@ public class FFmpegCommandServiceImpl implements CommandService<FFmpegConfig> {
                     command.append(" -vcodec ").append(codec).append(" -f flv -an ").append(output).append(appName);
                 } else {
                     // -f ：转换格式，默认flv
-                    String fmt = ffmpegConfig.getFmt();
+                    String fmt = ffmpegOnlineConfig.getFmt();
                     if(StringUtils.isNotBlank(fmt)){
                         command.append(" -f ").append(fmt);
                     }
                     // -r :帧率，默认25；-g :帧间隔
-                    String fps = ffmpegConfig.getFps();
+                    String fps = ffmpegOnlineConfig.getFps();
                     if (StringUtils.isNotBlank(fps)) {
                         command.append(" -r ").append(fps);
                         command.append(" -g ").append(fps);
                     }
                     // -s 分辨率 默认是原分辨率
-                    String rs = ffmpegConfig.getRs();
+                    String rs = ffmpegOnlineConfig.getRs();
                     if (StringUtils.isNotBlank(rs)) {
                         command.append(" -s ").append(rs);
                     }

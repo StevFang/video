@@ -31,7 +31,7 @@ public class OutHandler extends Thread {
     /**
      * 输出类型
      */
-    private String id = null;
+    private String appName = null;
 
     /**
      * 消息处理方法
@@ -42,9 +42,9 @@ public class OutHandler extends Thread {
         this.desstatus = desStatus;
     }
 
-    public OutHandler(InputStream is, String id, OutHandlerMethod ohm) {
+    public OutHandler(InputStream is, String appName, OutHandlerMethod ohm) {
         br = new BufferedReader(new InputStreamReader(is));
-        this.id = id;
+        this.appName = appName;
         this.ohm = ohm;
     }
 
@@ -64,9 +64,8 @@ public class OutHandler extends Thread {
     public void run() {
         String msg = null;
         try {
-            logger.info(id + "开始推流！");
             while (desstatus && (msg = br.readLine()) != null) {
-                ohm.parse(id, msg);
+                ohm.parse(appName, msg);
             }
         } catch (IOException e) {
             logger.error("发生内部异常错误，自动关闭[" + this.getId() + "]线程");

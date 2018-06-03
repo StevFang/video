@@ -1,11 +1,11 @@
-package com.qs.entity;
+package com.qs.model;
 
 /**
  * 用于存放任务id,任务主进程，任务输出线程
  *
  * @author fbin
  */
-public class TaskEntity {
+public class TaskModel {
 
     private final String id;//任务id
 
@@ -13,7 +13,7 @@ public class TaskEntity {
 
     private final Thread thread;//任务输出线程
 
-    public TaskEntity(String id, Process process, Thread thread) {
+    public TaskModel(String id, Process process, Thread thread) {
         this.id = id;
         this.process = process;
         this.thread = thread;
@@ -33,7 +33,7 @@ public class TaskEntity {
 
     @Override
     public String toString() {
-        return "TaskEntity [id=" + id + ", process=" + process + ", thread=" + thread + "]";
+        return "TaskModel [id=" + id + ", process=" + process + ", thread=" + thread + "]";
     }
 
 }

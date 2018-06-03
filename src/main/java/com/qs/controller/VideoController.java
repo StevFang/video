@@ -2,9 +2,7 @@ package com.qs.controller;
 
 import com.qs.common.DataTable;
 import com.qs.common.UploadResult;
-import com.qs.form.DecodeForm;
-import com.qs.form.DecodeInfo;
-import com.qs.form.VideoForm;
+import com.qs.form.*;
 import com.qs.service.VideoService;
 import com.qs.utils.ConvertUtil;
 import com.qs.ws.ResultInfo;
@@ -167,7 +165,7 @@ public class VideoController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/all")
+    @RequestMapping(value = "/all", method = { RequestMethod.GET })
     public ResultInfo findAll(
             HttpServletRequest request,
             @RequestParam(value = "query", required = false) VideoForm videoForm){
@@ -189,13 +187,34 @@ public class VideoController {
     }
 
     /**
+     * 视频直播
+     * @param request
+     * @param onlineForm
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/online")
+    public ResultInfo online(HttpServletRequest request, OnlineForm onlineForm){
+        ResultInfo resultInfo = ResultInfo.getInstance("0", "视频解码转码成功");
+        try{
+            OnlineInfo online = videoService.online(onlineForm);
+            resultInfo.setData(online);
+        }catch (Exception e){
+            logger.error("视频推流异常", e);
+            resultInfo.setCode("-1");
+            resultInfo.setMsg("视频推流异常,请联系管理员");
+        }
+        return resultInfo;
+    }
+
+    /**
      * 视频解码转码
      * @param request
      * @param decodeForm
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/decode")
+    @RequestMapping(value = "/decode", method = { RequestMethod.POST })
     public ResultInfo videoDecode(
             HttpServletRequest request, DecodeForm decodeForm){
         ResultInfo resultInfo = ResultInfo.getInstance("0", "视频解码转码成功");

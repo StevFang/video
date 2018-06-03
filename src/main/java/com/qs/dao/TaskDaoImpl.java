@@ -1,6 +1,6 @@
 package com.qs.dao;
 
-import com.qs.entity.TaskEntity;
+import com.qs.model.TaskModel;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -16,23 +16,23 @@ import java.util.concurrent.ConcurrentMap;
 public class TaskDaoImpl implements TaskDao {
 
     // 存放任务信息
-    private ConcurrentMap<String, TaskEntity> map = new ConcurrentHashMap<>();
+    private ConcurrentMap<String, TaskModel> map = new ConcurrentHashMap<>();
 
     @Override
-    public TaskEntity get(String id) {
+    public TaskModel get(String id) {
         return map.get(id);
     }
 
     @Override
-    public Collection<TaskEntity> getAll() {
+    public Collection<TaskModel> getAll() {
         return map.values();
     }
 
     @Override
-    public int add(TaskEntity taskEntity) {
-        String id = taskEntity.getId();
+    public int add(TaskModel taskModel) {
+        String id = taskModel.getId();
         if (id != null && !map.containsKey(id)) {
-            map.put(taskEntity.getId(), taskEntity);
+            map.put(taskModel.getId(), taskModel);
             if (map.get(id) != null) {
                 return 1;
             }

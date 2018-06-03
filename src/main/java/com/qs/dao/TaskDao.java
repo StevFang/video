@@ -1,6 +1,6 @@
 package com.qs.dao;
 
-import com.qs.entity.TaskEntity;
+import com.qs.model.TaskModel;
 
 import java.util.Collection;
 
@@ -13,22 +13,22 @@ public interface TaskDao {
 	/**
 	 * 通过id查询任务信息
 	 * @param id - 任务ID
-	 * @return TaskEntity -任务实体
+	 * @return TaskModel -任务实体
 	 */
-	TaskEntity get(String id);
+	TaskModel get(String id);
 
 	/**
 	 * 查询全部任务信息
-	 * @return Collection<TaskEntity>
+	 * @return Collection<TaskModel>
 	 */
-	Collection<TaskEntity> getAll();
+	Collection<TaskModel> getAll();
 
 	/**
 	 * 增加任务信息
-	 * @param taskEntity -任务信息实体
+	 * @param taskModel -任务信息实体
 	 * @return 增加数量：<1-增加失败，>=1-增加成功
 	 */
-	int add(TaskEntity taskEntity);
+	int add(TaskModel taskModel);
 
 	/**
 	 * 删除id对应的任务信息

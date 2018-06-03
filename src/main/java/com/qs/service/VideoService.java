@@ -1,10 +1,9 @@
 package com.qs.service;
 
 import com.qs.common.UploadResult;
-import com.qs.config.FFmpegConfig;
-import com.qs.form.DecodeForm;
-import com.qs.form.DecodeInfo;
-import com.qs.form.VideoForm;
+import com.qs.config.FFmpegDecodeConfig;
+import com.qs.config.FFmpegOnlineConfig;
+import com.qs.form.*;
 import com.qs.manager.FFmpegManager;
 import com.qs.utils.ConvertUtil;
 import com.qs.ws.ResultInfo;
@@ -48,6 +47,9 @@ public class VideoService {
 
     @Value("${server.ffmpeg.path}")
     private String ffmpegPath;
+
+    @Value("${server.memcoder.path}")
+    private String memcoderPath;
 
     @Autowired
     private FFmpegManager ffMpegManager;
@@ -198,21 +200,47 @@ public class VideoService {
      * @return
      */
     public DecodeInfo decodeVideo(DecodeForm decodeForm) {
-        FFmpegConfig ffmpegConfig = FFmpegConfig.getInstanceOf(decodeForm, ffmpegPath);
+
+        FFmpegDecodeConfig ffmpegDecodeConfig = FFmpegDecodeConfig.getInstanceOf(decodeForm, ffmpegPath, memcoderPath, savePath);
 
         // ffmpeg环境是否配置正确
-        if (ffmpegConfig == null) {
+        if (ffmpegDecodeConfig == null) {
             logger.error("配置未正确加载，无法执行");
             return new DecodeInfo(decodeForm.getVideoId(), "配置未正确加载，无法执行");
         }
         // 参数是否符合要求
-        if (StringUtils.isBlank(ffmpegConfig.getAppName())) {
+        if (StringUtils.isBlank(ffmpegDecodeConfig.getAppName())) {
             logger.error("参数不正确，无法执行");
             return new DecodeInfo(decodeForm.getVideoId(), "参数不正确，无法执行");
         }
-
-        ffMpegManager.start(ffmpegConfig, decodeForm.getVideoId());
+        ffMpegManager.start(ffmpegDecodeConfig);
 
         return new DecodeInfo(decodeForm.getVideoId(), "正在处理中，请稍后");
+    }
+
+    /**
+     * 在线推流
+     * @param onlineForm
+     * @return
+     */
+    public OnlineInfo online(OnlineForm onlineForm) {
+
+        FFmpegOnlineConfig ffmpegOnlineConfig = FFmpegOnlineConfig.getInstanceOf(onlineForm, ffmpegPath);
+
+        // ffmpeg环境是否配置正确
+        if (ffmpegOnlineConfig == null) {
+            logger.error("配置未正确加载，无法执行");
+            return new OnlineInfo(ffmpegOnlineConfig.getOutput(), "配置未正确加载，无法执行");
+        }
+        // 参数是否符合要求
+        if (StringUtils.isBlank(ffmpegOnlineConfig.getAppName())) {
+            logger.error("参数不正确，无法执行");
+            return new OnlineInfo(ffmpegOnlineConfig.getOutput(), "参数不正确，无法执行");
+        }
+
+        ffMpegManager.start(ffmpegOnlineConfig);
+
+        return new OnlineInfo(ffmpegOnlineConfig.getOutput(), "推流成功");
+
     }
 }
