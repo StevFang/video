@@ -9,7 +9,7 @@ import lombok.Data;
  * @author FBin
  */
 @Data
-public class FfmpegOnlineConfig extends AbstractFFmpegConfig {
+public class FfmpegLiveConfig extends AbstractFFmpegConfig {
 
     /**
      * ffmpeg 路径
@@ -56,7 +56,7 @@ public class FfmpegOnlineConfig extends AbstractFFmpegConfig {
      */
     private String rs;
 
-    private FfmpegOnlineConfig(){
+    private FfmpegLiveConfig(){
 
     }
 
@@ -66,17 +66,17 @@ public class FfmpegOnlineConfig extends AbstractFFmpegConfig {
      * @param ffmpegPath
      * @return
      */
-    public static FfmpegOnlineConfig getInstanceOf(LiveReqVO liveReqVO, String ffmpegPath) {
-        FfmpegOnlineConfig ffmpegOnlineConfig = new FfmpegOnlineConfig();
-        ffmpegOnlineConfig.setFfmpegPath(ffmpegPath);
-        ffmpegOnlineConfig.setInput(liveReqVO.getInput());
-        ffmpegOnlineConfig.setOutput(liveReqVO.getOutput());
-        ffmpegOnlineConfig.setAppName(liveReqVO.getAppName());
-        ffmpegOnlineConfig.setTwoPart(liveReqVO.getTwoPart());
-        ffmpegOnlineConfig.setCodec(liveReqVO.getCodec());
-        ffmpegOnlineConfig.setFmt(liveReqVO.getFmt());
-        ffmpegOnlineConfig.setFps(liveReqVO.getFps());
-        ffmpegOnlineConfig.setRs(liveReqVO.getRs());
-        return ffmpegOnlineConfig;
+    public static FfmpegLiveConfig getInstanceOf(LiveReqVO liveReqVO, String ffmpegPath) {
+        FfmpegLiveConfig ffmpegLiveConfig = new FfmpegLiveConfig();
+        ffmpegLiveConfig.setFfmpegPath(ffmpegPath);
+        ffmpegLiveConfig.setInput(liveReqVO.getInput());
+        ffmpegLiveConfig.setOutput(liveReqVO.getOutput());
+        ffmpegLiveConfig.setAppName(liveReqVO.getAppName());
+        ffmpegLiveConfig.setTwoPart(liveReqVO.getTwoPart());
+        ffmpegLiveConfig.setCodec(liveReqVO.getCodec());
+        ffmpegLiveConfig.setFmt(liveReqVO.getFmt());
+        ffmpegLiveConfig.setFps(liveReqVO.getFps());
+        ffmpegLiveConfig.setRs(liveReqVO.getRs());
+        return ffmpegLiveConfig;
     }
 }

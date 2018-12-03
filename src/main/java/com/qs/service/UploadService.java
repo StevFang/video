@@ -1,10 +1,13 @@
 package com.qs.service;
 
 import com.qs.common.UploadResult;
+import com.qs.utils.ConvertUtil;
+import com.qs.utils.VideoExceptionUtils;
 import com.qs.ws.ResultInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,40 +26,77 @@ import java.io.RandomAccessFile;
 @Service
 public class UploadService {
 
+    @Value("${server.upload.filepath}")
+    private String savePath;
+
+    @Value("${server.visit.path}")
+    private String visitPath;
+
+    /**
+     * 处理视频上传实现
+     * @param multipartFile
+     * @return
+     */
+    public String execUpload(MultipartFile multipartFile) {
+
+        VideoExceptionUtils.assertNotNull(multipartFile, "上传文件未获取到！");
+
+        File dirs = new File(savePath);
+        if(!dirs.exists()){
+            dirs.mkdirs();
+        }
+        // 给上传上来的文件一个新的名字
+        String oldFileName = multipartFile.getOriginalFilename();
+        String newFileName = ConvertUtil.getBase64Time() + oldFileName.substring(oldFileName.lastIndexOf("."));
+        File uploadFile = new File(savePath + newFileName);
+        try{
+            uploadFile.createNewFile();
+            DigestUtils.md5Hex(multipartFile.getInputStream());
+            FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), uploadFile);
+        }catch (Exception e){
+            log.error("创建目标文件异常", e);
+            VideoExceptionUtils.fail("上传文件保存异常！");
+            // 判断文件是否存在，存在即删除
+            if(uploadFile.exists()){
+                uploadFile.delete();
+            }
+        }
+        return visitPath + newFileName;
+    }
+
     /**
      * 上传单个分块的文件
      *
-     * @param resultInfo
      * @param multipartFile
      * @param targetFilePath
      */
-    public void uploadOneBlockFile(ResultInfo resultInfo, MultipartFile multipartFile, String targetFilePath){
-        UploadResult uploadResult = UploadResult.builder().build();
+    public String uploadOneBlockFile(MultipartFile multipartFile, String targetFilePath){
+
+        VideoExceptionUtils.assertNotNull(multipartFile, "未获取到上传文件");
+
         File destTempFile = new File(targetFilePath);
         File fileParent = destTempFile.getParentFile();
+
         // 判断父文件夹是否存在，不存在则创建
         if (!fileParent.exists()) {
             fileParent.mkdirs();
         }
+
         try {
             destTempFile.createNewFile();
-            if (multipartFile == null) {
-                resultInfo.setMsg("未获取到上传文件");
-            }
             DigestUtils.md5Hex(multipartFile.getInputStream());
             FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), destTempFile);
-            resultInfo.setData(uploadResult);
-
         } catch (IOException e) {
-            resultInfo.setMsg("文件写入发生错误");
             log.error("文件写入异常，异常原因：" + e.getMessage(), e);
+            VideoExceptionUtils.fail("文件写入发生错误");
         }
+
+        return visitPath + targetFilePath;
     }
 
-    public void uploadMultiBlockFile(ResultInfo resultInfo, MultipartFile multipartFile,
-                                     String blockIndex, String blockNumber, String randomUUID, String targetFilePath) {
+    public String uploadMultiBlockFile(MultipartFile multipartFile, String blockIndex,
+                                     String blockNumber, String randomUUID, String targetFilePath) {
         try {
-            UploadResult uploadResult = UploadResult.builder().build();
             String fileRealName = targetFilePath;
             String fileIndexPath = targetFilePath + ".index";
             targetFilePath = targetFilePath + ".part";
@@ -69,13 +109,12 @@ public class UploadService {
             try {
                 destTempFile.createNewFile();
             } catch (IOException e) {
-                resultInfo.setMsg("文件写入发生错误");
-                log.error("新建目录异常，异常原因：" + e.getMessage(), e);
-                e.printStackTrace();
+                log.error("新建文件异常，异常原因：" + e.getMessage(), e);
+                VideoExceptionUtils.fail("新建文件发生异常！");
             }
             this.fileConsistent(randomUUID, fileIndexPath, targetFilePath);
             byte[] buf = new byte[1024 * 1024 * 2];
-            int len = 0;
+            int len;
             RandomAccessFile fileWrite = new RandomAccessFile(destTempFile, "rw");
             InputStream fileReader = multipartFile.getInputStream();
             fileWrite.seek((Integer.valueOf(blockIndex) - 1) * 104857600);
@@ -90,11 +129,13 @@ public class UploadService {
                     Integer.valueOf(blockNumber))) {
                 File file = new File(targetFilePath);
                 file.renameTo(new File(fileRealName));
-                resultInfo.setData(uploadResult);
             }
         } catch (IOException e) {
             log.error("part文件写入异常，异常原因：" + e.getMessage(), e);
+            VideoExceptionUtils.fail("文件写入异常！");
         }
+
+        return visitPath + targetFilePath;
     }
 
 
@@ -105,7 +146,7 @@ public class UploadService {
      * @param filepath
      * @throws IOException
      */
-    public void fileConsistent(String randomUUID, String fileIndexPath,
+    private void fileConsistent(String randomUUID, String fileIndexPath,
                                String filepath) throws IOException {
         File fileIndex = new File(fileIndexPath);
         if (!fileIndex.exists()) {
@@ -142,7 +183,7 @@ public class UploadService {
      * @return
      * @throws IOException
      */
-    public boolean fileComplete(String randomUUID, String fileIndexPath,
+    private boolean fileComplete(String randomUUID, String fileIndexPath,
                                 int index, int blockNumber) throws IOException {
         File fileIndex = new File(fileIndexPath);
 
