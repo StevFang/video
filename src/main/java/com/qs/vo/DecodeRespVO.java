@@ -1,4 +1,4 @@
-package com.qs.form;
+package com.qs.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,21 +6,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 上传视频信息交互表单
+ * 解码转码信息
  *
  * Created by fbin on 2018/6/2.
+ *
+ * @author FBin
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class VideoForm extends QueryInfo{
+public class DecodeRespVO {
 
     private String videoId;
 
-    private String videoName;
-
-    //简介
-    private String videoIntro;
+    private String decodeLog;
 
 }

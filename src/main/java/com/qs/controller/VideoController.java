@@ -2,15 +2,14 @@ package com.qs.controller;
 
 import com.qs.common.DataTable;
 import com.qs.common.UploadResult;
-import com.qs.form.*;
+import com.qs.service.UploadService;
 import com.qs.service.VideoService;
 import com.qs.utils.ConvertUtil;
+import com.qs.vo.*;
 import com.qs.ws.ResultInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +40,9 @@ public class VideoController {
 
     @Autowired
     private VideoService videoService;
+
+    @Autowired
+    private UploadService uploadService;
 
     /**
      * 接收视频上传
@@ -80,77 +82,12 @@ public class VideoController {
                                     @RequestParam(value = "targetFilePath", required = false) String targetFilePath,
                                     @RequestParam(value = "randomUUID", required = false) String randomUUID,
                                     @RequestParam(value = "file", required = false) MultipartFile multipartFile) {
-        // 记录开始时间
-        UploadResult uploadResult = new UploadResult();
-        uploadResult.getStart();
         ResultInfo resultInfo = ResultInfo.getInstance("-1", "上传失败");
         // 文件不走分块上传
         if(ConvertUtil.getInt(blockNumber) == 1){
-            File destTempFile = new File(targetFilePath);
-            File fileParent = destTempFile.getParentFile();
-            // 判断父文件夹是否存在，不存在则创建
-            if (!fileParent.exists()) {
-                fileParent.mkdirs();
-            }
-            try {
-                destTempFile.createNewFile();
-                if (multipartFile == null) {
-                    resultInfo.setMsg("未获取到上传文件");
-                }
-                DigestUtils.md5Hex(multipartFile.getInputStream());
-                FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), destTempFile);
-                // 设置上传成功的返回信息
-                uploadResult.getEnd(targetFilePath);
-                resultInfo.setData(uploadResult);
-
-            } catch (IOException e) {
-                resultInfo.setMsg("文件写入发生错误");
-                log.error("文件写入异常，异常原因：" + e.getMessage(), e);
-                e.printStackTrace();
-            }
+            uploadService.uploadOneBlockFile(resultInfo, multipartFile, targetFilePath);
         }else if(ConvertUtil.getInt(blockNumber) > 1) {
-            try {
-                String fileRealName = targetFilePath;
-                String fileIndexPath = targetFilePath + ".index";
-                targetFilePath = targetFilePath + ".part";
-                File destTempFile = new File(targetFilePath);
-                File fileParent = destTempFile.getParentFile();
-                // 判断父文件夹是否存在，不存在则创建
-                if (!fileParent.exists()) {
-                    fileParent.mkdirs();
-                }
-                try {
-                    destTempFile.createNewFile();
-                } catch (IOException e) {
-                    resultInfo.setMsg("文件写入发生错误");
-                    log.error("新建目录异常，异常原因：" + e.getMessage(), e);
-                    e.printStackTrace();
-                }
-                videoService.fileConsistent(randomUUID, fileIndexPath, targetFilePath);
-                byte[] buf = new byte[1024 * 1024 * 2];
-                int len = 0;
-                RandomAccessFile fileWrite = new RandomAccessFile(destTempFile, "rw");
-                InputStream fileReader = multipartFile.getInputStream();
-                fileWrite.seek((Integer.valueOf(blockIndex) - 1) * 104857600);
-                while ((len = fileReader.read(buf)) != -1) {
-                    fileWrite.write(buf, 0, len);
-                }
-                fileReader.close();
-                fileWrite.close();
-
-                if (videoService.fileComplete(randomUUID, fileIndexPath,
-                        Integer.valueOf(blockIndex),
-                        Integer.valueOf(blockNumber))) {
-                    File file = new File(targetFilePath);
-                    file.renameTo(new File(fileRealName));
-                    // 设置上传成功的返回信息
-                    uploadResult.getEnd(targetFilePath);
-                    resultInfo.setData(uploadResult);
-                }
-            } catch (IOException e) {
-                log.error("part文件写入异常，异常原因：" + e.getMessage(), e);
-                e.printStackTrace();
-            }
+            uploadService.uploadMultiBlockFile(resultInfo, multipartFile, blockIndex, blockNumber, randomUUID, targetFilePath);
         }else{
             resultInfo.setMsg("缺少参数:blockNumber");
         }
@@ -160,22 +97,22 @@ public class VideoController {
     /**
      * 获取视频展示列表
      * @param request
-     * @param videoForm
+     * @param videoReqVO
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/all", method = { RequestMethod.GET })
     public ResultInfo findAll(
             HttpServletRequest request,
-            @RequestParam(value = "query", required = false) VideoForm videoForm){
+            @RequestParam(value = "query", required = false) VideoReqVO videoReqVO){
         ResultInfo resultInfo = ResultInfo.getInstance("0", "查询成功");
         try{
-            int total = videoService.findCount(videoForm);
+            int total = videoService.findCount(videoReqVO);
             List<Map<String, Object>> datas = new ArrayList<>();
             if(total > 0){
-                datas = videoService.findList(videoForm);
+                datas = videoService.findList(videoReqVO);
             }
-            DataTable dataTable = DataTable.getInstance(videoForm, total, datas);
+            DataTable dataTable = DataTable.getInstance(videoReqVO, total, datas);
             resultInfo.setData(dataTable);
         }catch (Exception e){
             log.error("获取视频列表数据异常", e);
@@ -188,15 +125,15 @@ public class VideoController {
     /**
      * 视频直播
      * @param request
-     * @param onlineForm
+     * @param liveReqVO
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/online")
-    public ResultInfo online(HttpServletRequest request, OnlineForm onlineForm){
+    public ResultInfo online(HttpServletRequest request, LiveReqVO liveReqVO){
         ResultInfo resultInfo = ResultInfo.getInstance("0", "视频解码转码成功");
         try{
-            OnlineInfo online = videoService.online(onlineForm);
+            LiveRespVO online = videoService.online(liveReqVO);
             resultInfo.setData(online);
         }catch (Exception e){
             log.error("视频推流异常", e);
@@ -208,18 +145,16 @@ public class VideoController {
 
     /**
      * 视频解码转码
-     * @param request
-     * @param decodeForm
+     * @param decodeReqVO
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/decode", method = { RequestMethod.POST })
-    public ResultInfo videoDecode(
-            HttpServletRequest request, DecodeForm decodeForm){
+    public ResultInfo videoDecode(DecodeReqVO decodeReqVO){
         ResultInfo resultInfo = ResultInfo.getInstance("0", "视频解码转码成功");
         try{
-            DecodeInfo decodeInfo = videoService.decodeVideo(decodeForm);
-            resultInfo.setData(decodeInfo);
+            DecodeRespVO decodeRespVO = videoService.decodeVideo(decodeReqVO);
+            resultInfo.setData(decodeRespVO);
         }catch (Exception e){
             log.error("视频解码转码异常", e);
             resultInfo.setCode("-1");

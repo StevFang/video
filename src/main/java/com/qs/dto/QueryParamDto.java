@@ -1,4 +1,4 @@
-package com.qs.form;
+package com.qs.dto;
 
 import lombok.Data;
 
@@ -6,9 +6,11 @@ import lombok.Data;
  * 查询参数信息
  *
  * Created by fbin on 2018/6/2.
+ *
+ * @author FBin
  */
 @Data
-public class QueryInfo {
+public class QueryParamDto {
 
     protected long num = 0;
 

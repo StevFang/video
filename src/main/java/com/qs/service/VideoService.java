@@ -1,18 +1,16 @@
 package com.qs.service;
 
 import com.qs.common.UploadResult;
-import com.qs.config.AbstractFFmpegDecodeConfig;
-import com.qs.config.AbstractFFmpegOnlineConfig;
-import com.qs.form.*;
+import com.qs.config.FfmpegDecodeConfig;
+import com.qs.config.FfmpegOnlineConfig;
 import com.qs.manager.FfmpegManagerImpl;
 import com.qs.utils.ConvertUtil;
+import com.qs.vo.*;
 import com.qs.ws.ResultInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -58,17 +56,14 @@ public class VideoService {
      * @param request
      * @return
      */
-    public ResultInfo execUpload(HttpServletRequest request) throws Exception {
+    public ResultInfo execUpload(HttpServletRequest request) {
         String servletPath = request.getScheme()+":" + request.getServerPort()+request.getContextPath();
         UploadResult uploadResult = new UploadResult();
-        uploadResult.getStart();
 
         ResultInfo resultInfo = ResultInfo.getInstance("0", "上传成功");
         MultipartHttpServletRequest multipartRequest= (MultipartHttpServletRequest) request;
-
-//        List<MultipartFile> fileList = multipartRequest.getFiles("file");
-
         MultipartFile multipartFile = multipartRequest.getFile("file");
+
         if(multipartFile == null){
             resultInfo.setCode("-1");
             resultInfo.setMsg("上传文件未获取到");
@@ -85,9 +80,6 @@ public class VideoService {
             uploadFile.createNewFile();
             DigestUtils.md5Hex(multipartFile.getInputStream());
             FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), uploadFile);
-
-            uploadResult.getEnd(servletPath + visitPath + newFileName);
-
         }catch (Exception e){
             log.error("创建目标文件异常", e);
             resultInfo.setCode("-1");
@@ -96,150 +88,76 @@ public class VideoService {
             if(uploadFile.exists()){
                 uploadFile.delete();
             }
-
-            uploadResult.getEnd("");
         }
         resultInfo.setData(uploadResult);
         return resultInfo;
     }
 
     /**
-     * 文件持久化
-     * @param randomUUID
-     * @param fileIndexPath
-     * @param filepath
-     * @throws IOException
-     */
-    public void fileConsistent(String randomUUID, String fileIndexPath,
-                        String filepath) throws IOException {
-        File fileIndex = new File(fileIndexPath);
-        if (!fileIndex.exists()) {
-            RandomAccessFile fileIndexWrite = new RandomAccessFile(fileIndex, "rw");
-            fileIndexWrite.seek(0);
-            fileIndexWrite.write(randomUUID.getBytes());
-            fileIndexWrite.close();
-        } else {
-            RandomAccessFile fileIndexWrite = new RandomAccessFile(fileIndex, "rw");
-            fileIndexWrite.seek(0);
-            byte[] bytes = new byte[36];
-            fileIndexWrite.read(bytes);
-            String uuid = new String(bytes);
-            fileIndexWrite.close();
-            if (!uuid.equals(randomUUID)) {
-                fileIndex.delete();
-                File file = new File(filepath);
-                file.delete();
-                RandomAccessFile fileIndexWriter = new RandomAccessFile(
-                        fileIndex, "rw");
-                fileIndexWriter.seek(0);
-                fileIndexWriter.write(randomUUID.getBytes());
-                fileIndexWriter.close();
-            }
-        }
-    }
-
-    /**
-     * 判断文件是否上传完成
-     * @param randomUUID
-     * @param fileIndexPath
-     * @param index
-     * @param blockNumber
-     * @return
-     * @throws IOException
-     */
-    public boolean fileComplete(String randomUUID, String fileIndexPath,
-                                int index, int blockNumber) throws IOException {
-        File fileIndex = new File(fileIndexPath);
-
-        RandomAccessFile fileIndexWrite = new RandomAccessFile(fileIndex, "rw");
-
-        fileIndexWrite.seek(randomUUID.length() + index * 4);
-        String number = String.valueOf(index) + ",";
-        fileIndexWrite.write(number.getBytes());
-        fileIndexWrite.seek(randomUUID.length());
-        byte[] buff = new byte[4];
-        // 用于保存实际读取的字节数
-        int hasRead = 0;
-        // 循环读取
-        String fileContent = "";
-        while ((hasRead = fileIndexWrite.read(buff)) > 0) {
-            fileContent = fileContent + new String(buff, 0, hasRead);
-        }
-        fileIndexWrite.close();
-        String[] list = fileContent.split(",");
-        System.out.println(list.length);
-        if (list.length == blockNumber) {
-            fileIndex.delete();
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * 获取视频总数量
-     * @param videoForm
+     * @param videoReqVO
      * @return
      */
-    public int findCount(VideoForm videoForm) {
+    public int findCount(VideoReqVO videoReqVO) {
         return 0;
     }
 
     /**
      * 获取视频列表
-     * @param videoForm
+     * @param videoReqVO
      * @return
      */
-    public List<Map<String, Object>> findList(VideoForm videoForm) {
+    public List<Map<String, Object>> findList(VideoReqVO videoReqVO) {
         return new ArrayList<>();
     }
 
     /**
      * 视频解码转码
-     * @param decodeForm
+     * @param decodeReqVO
      * @return
      */
-    public DecodeInfo decodeVideo(DecodeForm decodeForm) {
+    public DecodeRespVO decodeVideo(DecodeReqVO decodeReqVO) {
 
-        AbstractFFmpegDecodeConfig ffmpegDecodeConfig = AbstractFFmpegDecodeConfig.getInstanceOf(decodeForm, ffmpegPath, memcoderPath, savePath);
+        FfmpegDecodeConfig ffmpegDecodeConfig = FfmpegDecodeConfig.getInstanceOf(decodeReqVO, ffmpegPath, memcoderPath, savePath);
 
         // ffmpeg环境是否配置正确
         if (ffmpegDecodeConfig == null) {
             log.error("配置未正确加载，无法执行");
-            return new DecodeInfo(decodeForm.getVideoId(), "配置未正确加载，无法执行");
+            return new DecodeRespVO(decodeReqVO.getVideoId(), "配置未正确加载，无法执行");
         }
         // 参数是否符合要求
         if (StringUtils.isBlank(ffmpegDecodeConfig.getAppName())) {
             log.error("参数不正确，无法执行");
-            return new DecodeInfo(decodeForm.getVideoId(), "参数不正确，无法执行");
+            return new DecodeRespVO(decodeReqVO.getVideoId(), "参数不正确，无法执行");
         }
         ffmpegManager.start(ffmpegDecodeConfig);
 
-        return new DecodeInfo(decodeForm.getVideoId(), "正在处理中，请稍后");
+        return new DecodeRespVO(decodeReqVO.getVideoId(), "正在处理中，请稍后");
     }
 
     /**
      * 在线推流
-     * @param onlineForm
+     * @param liveReqVO
      * @return
      */
-    public OnlineInfo online(OnlineForm onlineForm) {
+    public LiveRespVO online(LiveReqVO liveReqVO) {
 
-        AbstractFFmpegOnlineConfig ffmpegOnlineConfig = AbstractFFmpegOnlineConfig.getInstanceOf(onlineForm, ffmpegPath);
+        FfmpegOnlineConfig ffmpegOnlineConfig = FfmpegOnlineConfig.getInstanceOf(liveReqVO, ffmpegPath);
 
         // ffmpeg环境是否配置正确
         if (ffmpegOnlineConfig == null) {
             log.error("配置未正确加载，无法执行");
-            return new OnlineInfo(ffmpegOnlineConfig.getOutput(), "配置未正确加载，无法执行");
+            return new LiveRespVO(ffmpegOnlineConfig.getOutput(), "配置未正确加载，无法执行");
         }
         // 参数是否符合要求
         if (StringUtils.isBlank(ffmpegOnlineConfig.getAppName())) {
             log.error("参数不正确，无法执行");
-            return new OnlineInfo(ffmpegOnlineConfig.getOutput(), "参数不正确，无法执行");
+            return new LiveRespVO(ffmpegOnlineConfig.getOutput(), "参数不正确，无法执行");
         }
 
         ffmpegManager.start(ffmpegOnlineConfig);
 
-        return new OnlineInfo(ffmpegOnlineConfig.getOutput(), "推流成功");
+        return new LiveRespVO(ffmpegOnlineConfig.getOutput(), "推流成功");
 
     }
 }

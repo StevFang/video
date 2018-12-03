@@ -1,6 +1,6 @@
 package com.qs.config;
 
-import com.qs.form.DecodeForm;
+import com.qs.vo.DecodeReqVO;
 import com.qs.utils.ConvertUtil;
 import lombok.Data;
 
@@ -10,7 +10,7 @@ import lombok.Data;
  * @author FBin
  */
 @Data
-public class AbstractFFmpegDecodeConfig extends AbstractFFmpegConfig {
+public class FfmpegDecodeConfig extends AbstractFFmpegConfig {
 
     /**
      * ffmpeg 路径
@@ -77,34 +77,34 @@ public class AbstractFFmpegDecodeConfig extends AbstractFFmpegConfig {
      */
     private String rs;
 
-    private AbstractFFmpegDecodeConfig(){
+    private FfmpegDecodeConfig(){
 
     }
 
     /**
      * 获取实例
-     * @param decodeForm
+     * @param decodeReqVO
      * @param ffmpegPath
      * @param memcoderPath
      * @return
      */
-    public static AbstractFFmpegDecodeConfig getInstanceOf(DecodeForm decodeForm, String ffmpegPath, String memcoderPath, String savePath) {
-        AbstractFFmpegDecodeConfig config = new AbstractFFmpegDecodeConfig();
+    public static FfmpegDecodeConfig getInstanceOf(DecodeReqVO decodeReqVO, String ffmpegPath, String memcoderPath, String savePath) {
+        FfmpegDecodeConfig config = new FfmpegDecodeConfig();
         config.setFfmpegPath(ffmpegPath);
         config.setMemcoderPath(memcoderPath);
-        config.setVideoId(decodeForm.getVideoId());
-        config.setAppName(decodeForm.getAppName());
-        config.setSourcePath(decodeForm.getSourcePath());
+        config.setVideoId(decodeReqVO.getVideoId());
+        config.setAppName(decodeReqVO.getAppName());
+        config.setSourcePath(decodeReqVO.getSourcePath());
         config.setTargetPath(savePath);
         // 目标文件命名
         String targetName = ConvertUtil.getBase64Time();
         config.setTargetName(targetName);
-        config.setFmt(decodeForm.getFmt());
-        config.setBitrate(decodeForm.getBitrate());
-        config.setFreq(decodeForm.getFreq());
-        config.setQscale(decodeForm.getQscale());
-        config.setFps(decodeForm.getFps());
-        config.setRs(decodeForm.getRs());
+        config.setFmt(decodeReqVO.getFmt());
+        config.setBitrate(decodeReqVO.getBitrate());
+        config.setFreq(decodeReqVO.getFreq());
+        config.setQscale(decodeReqVO.getQscale());
+        config.setFps(decodeReqVO.getFps());
+        config.setRs(decodeReqVO.getRs());
         return config;
     }
 }

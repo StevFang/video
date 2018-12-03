@@ -1,8 +1,8 @@
 package com.qs.manager;
 
 import com.qs.config.AbstractFFmpegConfig;
-import com.qs.config.AbstractFFmpegDecodeConfig;
-import com.qs.config.AbstractFFmpegOnlineConfig;
+import com.qs.config.FfmpegDecodeConfig;
+import com.qs.config.FfmpegOnlineConfig;
 import com.qs.dao.TaskDao;
 import com.qs.model.TaskModel;
 import com.qs.service.CommandService;
@@ -51,9 +51,9 @@ public class FfmpegManagerImpl implements FfmpegManager {
 	@Resource(name = "ffmpegDecodeCommandService")
 	private CommandService ffmpegDecodeCommandService;
 
-	private AbstractFFmpegOnlineConfig ffmpegOnlineConfig = null;
+	private FfmpegOnlineConfig ffmpegOnlineConfig = null;
 
-	private AbstractFFmpegDecodeConfig ffmpegDecodeConfig = null;
+	private FfmpegDecodeConfig ffmpegDecodeConfig = null;
 
 	@Override
 	public String start(String appName, String command) {
@@ -83,16 +83,16 @@ public class FfmpegManagerImpl implements FfmpegManager {
 
 		String commandLine = null;
 
-		if(abstractFFmpegConfig instanceof AbstractFFmpegOnlineConfig){
+		if(abstractFFmpegConfig instanceof FfmpegOnlineConfig){
 			// 直播配置
-			this.ffmpegOnlineConfig = (AbstractFFmpegOnlineConfig) abstractFFmpegConfig;
+			this.ffmpegOnlineConfig = (FfmpegOnlineConfig) abstractFFmpegConfig;
 			commandLine = ffmpegOnlineCommandService.createCommand(ffmpegOnlineConfig);
 			if (StringUtils.isNotBlank(commandLine)) {
 				return start(ffmpegOnlineConfig.getAppName(), commandLine, true);
 			}
-		}else if(abstractFFmpegConfig instanceof AbstractFFmpegDecodeConfig){
+		}else if(abstractFFmpegConfig instanceof FfmpegDecodeConfig){
 			// 转码配置
-			this.ffmpegDecodeConfig = (AbstractFFmpegDecodeConfig) abstractFFmpegConfig;
+			this.ffmpegDecodeConfig = (FfmpegDecodeConfig) abstractFFmpegConfig;
 			commandLine = ffmpegDecodeCommandService.createCommand(ffmpegDecodeConfig);
 			if (StringUtils.isNotBlank(commandLine)) {
 				return start(ffmpegDecodeConfig.getAppName(), commandLine, true);

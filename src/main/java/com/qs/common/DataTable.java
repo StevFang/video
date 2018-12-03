@@ -1,7 +1,6 @@
 package com.qs.common;
 
-import com.qs.form.QueryInfo;
-import lombok.Builder;
+import com.qs.dto.QueryParamDto;
 import lombok.Data;
 
 import java.util.List;
@@ -36,19 +35,19 @@ public class DataTable {
 
     /**
      * 获取实例
-     * @param queryInfo 查询信息
+     * @param queryParamDto 查询信息
      * @param total 总数量
      * @param datas 数据集
      * @return
      */
-    public static DataTable getInstance(QueryInfo queryInfo,
+    public static DataTable getInstance(QueryParamDto queryParamDto,
                                         int total, List<Map<String, Object>> datas) {
         DataTable dataTable = new DataTable();
         dataTable.setTotal(total);
         dataTable.setDatas(datas);
-        dataTable.setNum(queryInfo.getNum());
-        dataTable.setRows(queryInfo.getRows());
-        dataTable.setPages(calPages(total, queryInfo.getRows()));
+        dataTable.setNum(queryParamDto.getNum());
+        dataTable.setRows(queryParamDto.getRows());
+        dataTable.setPages(calPages(total, queryParamDto.getRows()));
 
         return dataTable;
     }
