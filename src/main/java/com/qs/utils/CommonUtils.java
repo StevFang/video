@@ -1,7 +1,7 @@
 package com.qs.utils;
 
 import com.qs.enums.VideoCodeEnum;
-import com.qs.ws.ResultInfo;
+import com.qs.ws.ResultVO;
 
 /**
  * 通用工具类
@@ -11,8 +11,8 @@ import com.qs.ws.ResultInfo;
  */
 public class CommonUtils {
 
-    public static final ResultInfo getResultInfoByCodeEnum(VideoCodeEnum videoCodeEnum){
-        return ResultInfo.builder().code(videoCodeEnum.getCode()).msg(videoCodeEnum.getLabel()).build();
+    public static final ResultVO getResultVOByCodeEnum(VideoCodeEnum videoCodeEnum){
+        return ResultVO.builder().code(videoCodeEnum.getCode()).msg(videoCodeEnum.getLabel()).build();
     }
 
 }

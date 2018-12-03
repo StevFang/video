@@ -1,15 +1,14 @@
 package com.qs.controller;
 
 import com.qs.service.DownloadService;
-import com.qs.ws.ResultInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 下载服务中心
@@ -33,15 +32,13 @@ public class DownloadController {
      * @param path 保存地址
      * @return
      */
-    @ResponseBody
     @RequestMapping("/common")
-    public ResultInfo download(
+    public void download(
             HttpServletRequest request,
+            HttpServletResponse response,
             @RequestParam(value = "link", required = false) String link,
             @RequestParam(value = "path", required = false) String path){
-        ResultInfo resultInfo = ResultInfo.getInstance("-1", "");
 
-        return resultInfo;
     }
 
     /**
@@ -51,15 +48,13 @@ public class DownloadController {
      * @param path 保存地址
      * @return
      */
-    @ResponseBody
     @RequestMapping("/multi")
-    public ResultInfo multiDownload(
+    public void multiDownload(
             HttpServletRequest request,
+            HttpServletResponse response,
             @RequestParam(value = "link", required = false) String link,
             @RequestParam(value = "path", required = false) String path){
-        ResultInfo resultInfo = ResultInfo.getInstance("-1", "");
 
-        return resultInfo;
     }
 
     /**
@@ -69,15 +64,13 @@ public class DownloadController {
      * @param path 保存地址
      * @return
      */
-    @ResponseBody
-    @RequestMapping("/substep")
-    public ResultInfo substepDownload(
+    @RequestMapping("/distributed")
+    public void distributedDownload(
             HttpServletRequest request,
+            HttpServletResponse response,
             @RequestParam(value = "link", required = false) String link,
             @RequestParam(value = "path", required = false) String path){
-        ResultInfo resultInfo = ResultInfo.getInstance("-1", "");
 
-        return resultInfo;
     }
 
 }

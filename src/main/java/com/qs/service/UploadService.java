@@ -1,9 +1,7 @@
 package com.qs.service;
 
-import com.qs.common.UploadResult;
 import com.qs.utils.ConvertUtil;
 import com.qs.utils.VideoExceptionUtils;
-import com.qs.ws.ResultInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;

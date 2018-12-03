@@ -12,7 +12,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class ResultInfo {
+public class ResultVO {
 
     public String code;
 
