@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
  * 下载服务中心
  *
  * Created by fbin on 2018/6/1.
+ *
+ * @author FBin
  */
 @RestController
 @Scope("prototype")

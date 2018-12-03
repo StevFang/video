@@ -1,6 +1,6 @@
 package com.qs.manager;
 
-import com.qs.config.FFmpegConfig;
+import com.qs.config.AbstractFFmpegConfig;
 import com.qs.model.TaskModel;
 
 import java.util.Collection;
@@ -10,7 +10,7 @@ import java.util.Collection;
  * 
  * @author fbin
  */
-public interface FFmpegManager {
+public interface FfmpegManager {
 
 	/**
 	 * 通过命令发布任务（默认命令前不加FFmpeg路径）
@@ -24,20 +24,20 @@ public interface FFmpegManager {
 	/**
 	 * 通过命令发布任务
 	 * @param id - 任务标识
-	 * @param commond - FFmpeg命令
+	 * @param command - FFmpeg命令
 	 * @param hasPath - 命令中是否包含FFmpeg执行文件的绝对路径
 	 * @return
 	 */
-	String start(String id, String commond, boolean hasPath);
+	String start(String id, String command, boolean hasPath);
 
 	/**
 	 * 通过组装命令发布任务
 	 * 
-	 * @param fFmpegConfig -组装命令所需配置
+	 * @param abstractFFmpegConfig -组装命令所需配置
 	 *
 	 * @return
 	 */
-	String start(FFmpegConfig fFmpegConfig);
+	String start(AbstractFFmpegConfig abstractFFmpegConfig);
 	
 	/**
 	 * 停止任务

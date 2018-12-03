@@ -2,6 +2,8 @@ package com.qs.common;
 
 /**
  * Created by fbin on 2018/6/1.
+ *
+ * @author FBin
  */
 public class DateConstants {
 

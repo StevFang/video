@@ -6,6 +6,7 @@ import com.qs.form.*;
 import com.qs.service.VideoService;
 import com.qs.utils.ConvertUtil;
 import com.qs.ws.ResultInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -29,16 +30,14 @@ import java.util.Map;
  * 视频服务中心
  *
  * Created by fbin on 2018/5/30.
+ *
+ * @author FBin
  */
+@Slf4j
 @RestController
 @Scope("prototype")
 @RequestMapping("/video")
 public class VideoController {
-
-    /**
-     * 日志记录
-     */
-    private static Logger logger = LoggerFactory.getLogger(VideoController.class);
 
     @Autowired
     private VideoService videoService;
@@ -57,7 +56,7 @@ public class VideoController {
             // 处理视频上传
             return videoService.execUpload(request);
         } catch (Exception e) {
-            logger.error("上传视频接收报错,错误原因：" + e.getMessage(), e);
+            log.error("上传视频接收报错,错误原因：" + e.getMessage(), e);
             return ResultInfo.getInstance("-1", "上传视频接收报错，请联系管理员");
         }
     }
@@ -106,7 +105,7 @@ public class VideoController {
 
             } catch (IOException e) {
                 resultInfo.setMsg("文件写入发生错误");
-                logger.error("文件写入异常，异常原因：" + e.getMessage(), e);
+                log.error("文件写入异常，异常原因：" + e.getMessage(), e);
                 e.printStackTrace();
             }
         }else if(ConvertUtil.getInt(blockNumber) > 1) {
@@ -124,7 +123,7 @@ public class VideoController {
                     destTempFile.createNewFile();
                 } catch (IOException e) {
                     resultInfo.setMsg("文件写入发生错误");
-                    logger.error("新建目录异常，异常原因：" + e.getMessage(), e);
+                    log.error("新建目录异常，异常原因：" + e.getMessage(), e);
                     e.printStackTrace();
                 }
                 videoService.fileConsistent(randomUUID, fileIndexPath, targetFilePath);
@@ -149,7 +148,7 @@ public class VideoController {
                     resultInfo.setData(uploadResult);
                 }
             } catch (IOException e) {
-                logger.error("part文件写入异常，异常原因：" + e.getMessage(), e);
+                log.error("part文件写入异常，异常原因：" + e.getMessage(), e);
                 e.printStackTrace();
             }
         }else{
@@ -179,7 +178,7 @@ public class VideoController {
             DataTable dataTable = DataTable.getInstance(videoForm, total, datas);
             resultInfo.setData(dataTable);
         }catch (Exception e){
-            logger.error("获取视频列表数据异常", e);
+            log.error("获取视频列表数据异常", e);
             resultInfo.setCode("-1");
             resultInfo.setMsg("获取视频列表数据异常,请联系管理员");
         }
@@ -200,7 +199,7 @@ public class VideoController {
             OnlineInfo online = videoService.online(onlineForm);
             resultInfo.setData(online);
         }catch (Exception e){
-            logger.error("视频推流异常", e);
+            log.error("视频推流异常", e);
             resultInfo.setCode("-1");
             resultInfo.setMsg("视频推流异常,请联系管理员");
         }
@@ -222,7 +221,7 @@ public class VideoController {
             DecodeInfo decodeInfo = videoService.decodeVideo(decodeForm);
             resultInfo.setData(decodeInfo);
         }catch (Exception e){
-            logger.error("视频解码转码异常", e);
+            log.error("视频解码转码异常", e);
             resultInfo.setCode("-1");
             resultInfo.setMsg("视频解码转码异常,请联系管理员");
         }

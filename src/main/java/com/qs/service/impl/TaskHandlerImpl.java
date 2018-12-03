@@ -1,7 +1,6 @@
 package com.qs.service.impl;
 
 import com.qs.model.TaskModel;
-import com.qs.service.OutHandlerMethod;
 import com.qs.service.TaskHandler;
 import com.qs.threads.OutHandler;
 import org.springframework.stereotype.Component;
@@ -23,28 +22,29 @@ public class TaskHandlerImpl implements TaskHandler {
      * 任务消息处理器
      */
     @Resource(name = "defaultOutHandlerMethod")
-    private OutHandlerMethod ohm;
+    private DefaultOutHandlerMethod defaultOutHandlerMethod;
 
     @Override
     public TaskModel process(String appName, String command) {
         Process process = null;
         OutHandler outHandler = null;
-        TaskModel tasker = null;
+        TaskModel taskModel = null;
         try {
             if (runtime == null) {
                 runtime = Runtime.getRuntime();
             }
-            process = runtime.exec(command);// 执行本地命令获取任务主进程
-            outHandler = new OutHandler(process.getErrorStream(), appName, ohm);
+            // 执行本地命令获取任务主进程
+            process = runtime.exec(command);
+            outHandler = new OutHandler(process.getErrorStream(), appName, defaultOutHandlerMethod);
             outHandler.start();
-            tasker = new TaskModel(appName, process, outHandler);
+            taskModel = new TaskModel(appName, process, outHandler);
         } catch (IOException e) {
             stop(outHandler);
             stop(process);
             // 出现异常说明开启失败，返回null
             return null;
         }
-        return tasker;
+        return taskModel;
     }
 
     @Override
@@ -68,9 +68,10 @@ public class TaskHandlerImpl implements TaskHandler {
 
     @Override
     public boolean stop(Process process, Thread thread) {
-        boolean ret;
-        ret = stop(thread);
-        ret = stop(process);
+        boolean ret = stop(thread);
+        if(ret == true){
+            ret = stop(process);
+        }
         return ret;
     }
 }

@@ -1,6 +1,6 @@
 package com.qs.service.impl;
 
-import com.qs.config.FFmpegDecodeConfig;
+import com.qs.config.AbstractFFmpegDecodeConfig;
 import com.qs.service.CommandService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ import java.io.InputStream;
  *
  */
 @Component("ffmpegDecodeCommandService")
-public class FFmpegDecodeCommandServiceImpl implements CommandService<FFmpegDecodeConfig> {
+public class FFmpegDecodeCommandServiceImpl implements CommandService<AbstractFFmpegDecodeConfig> {
 
     /**
      * 记录日志
@@ -24,7 +24,7 @@ public class FFmpegDecodeCommandServiceImpl implements CommandService<FFmpegDeco
     private static Logger logger = LoggerFactory.getLogger(FFmpegDecodeCommandServiceImpl.class);
 
     @Override
-    public String createCommand(FFmpegDecodeConfig fFmpegDecodeConfig) {
+    public String createCommand(AbstractFFmpegDecodeConfig fFmpegDecodeConfig) {
         String sourcePath = fFmpegDecodeConfig.getSourcePath();
         // 校验是否是文件
         if(!checkfile(sourcePath)){
@@ -100,7 +100,7 @@ public class FFmpegDecodeCommandServiceImpl implements CommandService<FFmpegDeco
      * @param config
      * @return
      */
-    private String processAVI(FFmpegDecodeConfig config) {
+    private String processAVI(AbstractFFmpegDecodeConfig config) {
         StringBuilder command = new StringBuilder();
         command.append(config.getMemcoderPath()).append(" ");
         command.append(config.getSourcePath());
@@ -141,7 +141,7 @@ public class FFmpegDecodeCommandServiceImpl implements CommandService<FFmpegDeco
      * @param config
      * @return
      */
-    private String getFFmpegCommand(FFmpegDecodeConfig config) {
+    private String getFFmpegCommand(AbstractFFmpegDecodeConfig config) {
         String sourcePath = config.getSourcePath();
         try{
             StringBuilder command = new StringBuilder();

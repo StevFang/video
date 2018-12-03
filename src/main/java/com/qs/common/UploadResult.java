@@ -14,6 +14,8 @@ import java.time.format.DateTimeFormatter;
  * 上传结果信息
  *
  * Created by fbin on 2018/5/30.
+ *
+ * @author FBin
  */
 @Data
 @NoArgsConstructor

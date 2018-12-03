@@ -7,7 +7,7 @@ import lombok.Data;
  * FFmpeg推流配置
  */
 @Data
-public class FFmpegOnlineConfig extends FFmpegConfig {
+public class AbstractFFmpegOnlineConfig extends AbstractFFmpegConfig {
 
     // ffmpeg 路径
     private String ffmpegPath;
@@ -36,7 +36,7 @@ public class FFmpegOnlineConfig extends FFmpegConfig {
     // -s 分辨率 默认是原分辨率
     private String rs;
 
-    private FFmpegOnlineConfig(){
+    private AbstractFFmpegOnlineConfig(){
 
     }
 
@@ -46,8 +46,8 @@ public class FFmpegOnlineConfig extends FFmpegConfig {
      * @param ffmpegPath
      * @return
      */
-    public static FFmpegOnlineConfig getInstanceOf(OnlineForm onlineForm, String ffmpegPath) {
-        FFmpegOnlineConfig ffmpegOnlineConfig = new FFmpegOnlineConfig();
+    public static AbstractFFmpegOnlineConfig getInstanceOf(OnlineForm onlineForm, String ffmpegPath) {
+        AbstractFFmpegOnlineConfig ffmpegOnlineConfig = new AbstractFFmpegOnlineConfig();
         ffmpegOnlineConfig.setFfmpegPath(ffmpegPath);
         ffmpegOnlineConfig.setInput(onlineForm.getInput());
         ffmpegOnlineConfig.setOutput(onlineForm.getOutput());

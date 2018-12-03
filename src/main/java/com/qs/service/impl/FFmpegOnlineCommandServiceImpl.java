@@ -1,6 +1,6 @@
 package com.qs.service.impl;
 
-import com.qs.config.FFmpegOnlineConfig;
+import com.qs.config.AbstractFFmpegOnlineConfig;
 import com.qs.service.CommandService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
  * 创建ffmpeg 直播推流 指令
  */
 @Component("ffmpegOnlineCommandService")
-public class FFmpegOnlineCommandServiceImpl implements CommandService<FFmpegOnlineConfig> {
+public class FFmpegOnlineCommandServiceImpl implements CommandService<AbstractFFmpegOnlineConfig> {
 
     private static Logger logger = LoggerFactory.getLogger(FFmpegOnlineCommandServiceImpl.class);
 
     @Override
-    public String createCommand(FFmpegOnlineConfig ffmpegOnlineConfig) {
+    public String createCommand(AbstractFFmpegOnlineConfig ffmpegOnlineConfig) {
         try{
             String ffmpegPath = ffmpegOnlineConfig.getFfmpegPath();
             if(StringUtils.isNotBlank(ffmpegPath)) {

@@ -1,15 +1,14 @@
 package com.qs.manager;
 
-import com.qs.config.FFmpegConfig;
-import com.qs.config.FFmpegDecodeConfig;
-import com.qs.config.FFmpegOnlineConfig;
+import com.qs.config.AbstractFFmpegConfig;
+import com.qs.config.AbstractFFmpegDecodeConfig;
+import com.qs.config.AbstractFFmpegOnlineConfig;
 import com.qs.dao.TaskDao;
 import com.qs.model.TaskModel;
 import com.qs.service.CommandService;
-import com.qs.service.TaskHandler;
+import com.qs.service.impl.TaskHandlerImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,13 +23,9 @@ import java.util.Iterator;
  * 
  * @author fbin
  */
+@Slf4j
 @Component("ffmpegManager")
-public class FFmpegManagerImpl implements FFmpegManager {
-
-	/**
-	 * 记录日志
-	 */
-	private static Logger logger = LoggerFactory.getLogger(FFmpegManagerImpl.class);
+public class FfmpegManagerImpl implements FfmpegManager {
 
 	/**
 	 * 任务持久化器
@@ -42,7 +37,7 @@ public class FFmpegManagerImpl implements FFmpegManager {
 	 * 任务执行处理器
 	 */
 	@Autowired
-	private TaskHandler taskHandler;
+	private TaskHandlerImpl taskHandler;
 
 	/**
 	 * ffmpeg 直播推流服务
@@ -56,9 +51,9 @@ public class FFmpegManagerImpl implements FFmpegManager {
 	@Resource(name = "ffmpegDecodeCommandService")
 	private CommandService ffmpegDecodeCommandService;
 
-	private FFmpegOnlineConfig ffmpegOnlineConfig = null;
+	private AbstractFFmpegOnlineConfig ffmpegOnlineConfig = null;
 
-	private FFmpegDecodeConfig ffmpegDecodeConfig = null;
+	private AbstractFFmpegDecodeConfig ffmpegDecodeConfig = null;
 
 	@Override
 	public String start(String appName, String command) {
@@ -67,7 +62,7 @@ public class FFmpegManagerImpl implements FFmpegManager {
 
 	@Override
 	public String start(String appName, String command, boolean hasPath) {
-		logger.info("command= "+ command);
+		log.info("command= "+ command);
 		if (appName != null && command != null) {
 			TaskModel task = taskHandler.process(appName, hasPath ? command : ffmpegOnlineConfig.getFfmpegPath() + command);
 			if (task != null) {
@@ -84,20 +79,20 @@ public class FFmpegManagerImpl implements FFmpegManager {
 	}
 
 	@Override
-	public String start(FFmpegConfig fFmpegConfig) {
+	public String start(AbstractFFmpegConfig abstractFFmpegConfig) {
 
 		String commandLine = null;
 
-		if(fFmpegConfig instanceof FFmpegOnlineConfig){
+		if(abstractFFmpegConfig instanceof AbstractFFmpegOnlineConfig){
 			// 直播配置
-			this.ffmpegOnlineConfig = (FFmpegOnlineConfig) fFmpegConfig;
+			this.ffmpegOnlineConfig = (AbstractFFmpegOnlineConfig) abstractFFmpegConfig;
 			commandLine = ffmpegOnlineCommandService.createCommand(ffmpegOnlineConfig);
 			if (StringUtils.isNotBlank(commandLine)) {
 				return start(ffmpegOnlineConfig.getAppName(), commandLine, true);
 			}
-		}else if(fFmpegConfig instanceof FFmpegDecodeConfig){
+		}else if(abstractFFmpegConfig instanceof AbstractFFmpegDecodeConfig){
 			// 转码配置
-			this.ffmpegDecodeConfig = (FFmpegDecodeConfig) fFmpegConfig;
+			this.ffmpegDecodeConfig = (AbstractFFmpegDecodeConfig) abstractFFmpegConfig;
 			commandLine = ffmpegDecodeCommandService.createCommand(ffmpegDecodeConfig);
 			if (StringUtils.isNotBlank(commandLine)) {
 				return start(ffmpegDecodeConfig.getAppName(), commandLine, true);
@@ -116,7 +111,7 @@ public class FFmpegManagerImpl implements FFmpegManager {
 				return true;
 			}
 		}
-		logger.error("停止任务失败！id=" + id);
+		log.error("停止任务失败！id=" + id);
 		return false;
 	}
 

@@ -1,6 +1,7 @@
 package com.qs.threads;
 
 import com.qs.service.OutHandlerMethod;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +15,8 @@ import java.io.InputStreamReader;
  *
  * @author fbin
  */
+@Slf4j
 public class OutHandler extends Thread {
-
-    private static Logger logger = LoggerFactory.getLogger(OutHandler.class);
 
     /**
      * 控制状态
@@ -26,12 +26,12 @@ public class OutHandler extends Thread {
     /**
      * 读取输出流
      */
-    private BufferedReader br = null;
+    private BufferedReader br;
 
     /**
      * 输出类型
      */
-    private String appName = null;
+    private String appName;
 
     /**
      * 消息处理方法
@@ -62,13 +62,13 @@ public class OutHandler extends Thread {
      */
     @Override
     public void run() {
-        String msg = null;
+        String msg;
         try {
             while (desstatus && (msg = br.readLine()) != null) {
                 ohm.parse(appName, msg);
             }
         } catch (IOException e) {
-            logger.error("发生内部异常错误，自动关闭[" + this.getId() + "]线程");
+            log.error("发生内部异常错误，自动关闭[" + this.getId() + "]线程");
             interrupt();
         } finally {
             if (this.isAlive()) {

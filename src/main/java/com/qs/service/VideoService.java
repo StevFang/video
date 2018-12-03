@@ -1,12 +1,13 @@
 package com.qs.service;
 
 import com.qs.common.UploadResult;
-import com.qs.config.FFmpegDecodeConfig;
-import com.qs.config.FFmpegOnlineConfig;
+import com.qs.config.AbstractFFmpegDecodeConfig;
+import com.qs.config.AbstractFFmpegOnlineConfig;
 import com.qs.form.*;
-import com.qs.manager.FFmpegManager;
+import com.qs.manager.FfmpegManagerImpl;
 import com.qs.utils.ConvertUtil;
 import com.qs.ws.ResultInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -30,14 +31,12 @@ import java.util.Map;
  * 视频处理业务类
  *
  * Created by fbin on 2018/5/30.
+ *
+ * @author FBin
  */
+@Slf4j
 @Service("videoService")
 public class VideoService {
-
-    /**
-     * 记录日志
-     */
-    private static Logger logger = LoggerFactory.getLogger(VideoService.class);
 
     @Value("${server.upload.filepath}")
     private String savePath;
@@ -52,7 +51,7 @@ public class VideoService {
     private String memcoderPath;
 
     @Autowired
-    private FFmpegManager ffMpegManager;
+    private FfmpegManagerImpl ffmpegManager;
 
     /**
      * 处理视频上传实现
@@ -90,7 +89,7 @@ public class VideoService {
             uploadResult.getEnd(servletPath + visitPath + newFileName);
 
         }catch (Exception e){
-            logger.error("创建目标文件异常", e);
+            log.error("创建目标文件异常", e);
             resultInfo.setCode("-1");
             resultInfo.setMsg("上传文件保存异常");
             // 判断文件是否写入成功，写入成功进行删除
@@ -122,9 +121,9 @@ public class VideoService {
         } else {
             RandomAccessFile fileIndexWrite = new RandomAccessFile(fileIndex, "rw");
             fileIndexWrite.seek(0);
-            byte bys[] = new byte[36];
-            fileIndexWrite.read(bys);
-            String uuid = new String(bys);
+            byte[] bytes = new byte[36];
+            fileIndexWrite.read(bytes);
+            String uuid = new String(bytes);
             fileIndexWrite.close();
             if (!uuid.equals(randomUUID)) {
                 fileIndex.delete();
@@ -201,19 +200,19 @@ public class VideoService {
      */
     public DecodeInfo decodeVideo(DecodeForm decodeForm) {
 
-        FFmpegDecodeConfig ffmpegDecodeConfig = FFmpegDecodeConfig.getInstanceOf(decodeForm, ffmpegPath, memcoderPath, savePath);
+        AbstractFFmpegDecodeConfig ffmpegDecodeConfig = AbstractFFmpegDecodeConfig.getInstanceOf(decodeForm, ffmpegPath, memcoderPath, savePath);
 
         // ffmpeg环境是否配置正确
         if (ffmpegDecodeConfig == null) {
-            logger.error("配置未正确加载，无法执行");
+            log.error("配置未正确加载，无法执行");
             return new DecodeInfo(decodeForm.getVideoId(), "配置未正确加载，无法执行");
         }
         // 参数是否符合要求
         if (StringUtils.isBlank(ffmpegDecodeConfig.getAppName())) {
-            logger.error("参数不正确，无法执行");
+            log.error("参数不正确，无法执行");
             return new DecodeInfo(decodeForm.getVideoId(), "参数不正确，无法执行");
         }
-        ffMpegManager.start(ffmpegDecodeConfig);
+        ffmpegManager.start(ffmpegDecodeConfig);
 
         return new DecodeInfo(decodeForm.getVideoId(), "正在处理中，请稍后");
     }
@@ -225,20 +224,20 @@ public class VideoService {
      */
     public OnlineInfo online(OnlineForm onlineForm) {
 
-        FFmpegOnlineConfig ffmpegOnlineConfig = FFmpegOnlineConfig.getInstanceOf(onlineForm, ffmpegPath);
+        AbstractFFmpegOnlineConfig ffmpegOnlineConfig = AbstractFFmpegOnlineConfig.getInstanceOf(onlineForm, ffmpegPath);
 
         // ffmpeg环境是否配置正确
         if (ffmpegOnlineConfig == null) {
-            logger.error("配置未正确加载，无法执行");
+            log.error("配置未正确加载，无法执行");
             return new OnlineInfo(ffmpegOnlineConfig.getOutput(), "配置未正确加载，无法执行");
         }
         // 参数是否符合要求
         if (StringUtils.isBlank(ffmpegOnlineConfig.getAppName())) {
-            logger.error("参数不正确，无法执行");
+            log.error("参数不正确，无法执行");
             return new OnlineInfo(ffmpegOnlineConfig.getOutput(), "参数不正确，无法执行");
         }
 
-        ffMpegManager.start(ffmpegOnlineConfig);
+        ffmpegManager.start(ffmpegOnlineConfig);
 
         return new OnlineInfo(ffmpegOnlineConfig.getOutput(), "推流成功");
 
