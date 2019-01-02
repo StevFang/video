@@ -1,4 +1,4 @@
-package com.qs.common;
+package com.qs.vo.resp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,24 +6,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 分页信息
+ * 解码转码信息
  *
  * Created by fbin on 2018/6/2.
+ *
+ * @author FBin
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PageInfo {
+public class DecodeRespVO {
 
-    private Long num;
+    private String videoId;
 
-    private Long rows;
-
-    private String[] sorts;
-
-    public Long getStart(){
-        return rows * (num - 1);
-    }
+    private String decodeLog;
 
 }

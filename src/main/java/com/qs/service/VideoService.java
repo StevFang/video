@@ -1,10 +1,10 @@
 package com.qs.service;
 
 import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveConfig;
-import com.qs.vo.DecodeReqVO;
-import com.qs.vo.DecodeRespVO;
-import com.qs.vo.LiveRespVO;
-import com.qs.vo.VideoReqVO;
+import com.qs.vo.req.DecodeReqVO;
+import com.qs.vo.resp.DecodeRespVO;
+import com.qs.vo.resp.LiveRespVO;
+import com.qs.vo.req.VideoReqVO;
 
 import java.util.List;
 import java.util.Map;

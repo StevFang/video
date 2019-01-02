@@ -1,6 +1,6 @@
 package com.qs.dto.config;
 
-import com.qs.vo.LiveReqVO;
+import com.qs.vo.req.LiveReqVO;
 import lombok.Data;
 
 /**

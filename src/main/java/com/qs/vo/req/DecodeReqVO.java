@@ -1,4 +1,4 @@
-package com.qs.vo;
+package com.qs.vo.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

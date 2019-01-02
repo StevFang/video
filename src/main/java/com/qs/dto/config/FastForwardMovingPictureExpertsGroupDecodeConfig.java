@@ -1,6 +1,6 @@
 package com.qs.dto.config;
 
-import com.qs.vo.DecodeReqVO;
+import com.qs.vo.req.DecodeReqVO;
 import com.qs.utils.ConvertUtil;
 import lombok.Data;
 

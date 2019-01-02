@@ -1,4 +1,4 @@
-package com.qs.common;
+package com.qs.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UploadResult {
+public class UploadRespDTO {
 
     private String url;
 

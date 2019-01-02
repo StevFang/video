@@ -1,7 +1,7 @@
 package com.qs.utils;
 
 import com.qs.enums.VideoCodeEnum;
-import com.qs.vo.ResultVO;
+import com.qs.vo.resp.VideoRespVO;
 
 /**
  * 通用工具类
@@ -11,8 +11,28 @@ import com.qs.vo.ResultVO;
  */
 public class CommonUtils {
 
-    public static final ResultVO getResultVOByCodeEnum(VideoCodeEnum videoCodeEnum){
-        return ResultVO.builder().code(videoCodeEnum.getCode()).msg(videoCodeEnum.getLabel()).build();
+    public static final VideoRespVO getVideoRespVOByCodeEnum(VideoCodeEnum videoCodeEnum){
+        return VideoRespVO.builder().code(videoCodeEnum.getCode()).msg(videoCodeEnum.getLabel()).build();
+    }
+
+    /**
+     * 获取分页页数的算法
+     * @param total
+     * @param pageSize
+     * @return
+     */
+    public static Integer calPages(int total, int pageSize){
+        if(total > 0){
+            if(total >= pageSize){
+                return Math.floorMod(total, pageSize) > 0 ?
+                        Math.floorDiv(total, pageSize) :
+                        Math.floorDiv(total, pageSize) + 1;
+            }else{
+                return 1;
+            }
+        }else{
+            return 0;
+        }
     }
 
 }

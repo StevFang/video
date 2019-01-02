@@ -1,6 +1,6 @@
-package com.qs.vo;
+package com.qs.vo.req;
 
-import com.qs.dto.QueryParamDto;
+import com.qs.dto.QueryParamDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class VideoReqVO extends QueryParamDto {
+public class VideoReqVO extends QueryParamDTO {
 
     private String videoId;
 

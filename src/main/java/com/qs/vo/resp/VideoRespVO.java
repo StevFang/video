@@ -1,4 +1,4 @@
-package com.qs.vo;
+package com.qs.vo.resp;
 
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +12,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class ResultVO {
+public class VideoRespVO {
 
     public String code;
 
