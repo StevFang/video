@@ -1,7 +1,7 @@
 package com.qs.controller;
 
 import com.qs.enums.VideoCodeEnum;
-import com.qs.service.UploadService;
+import com.qs.service.upload.UploadServiceImpl;
 import com.qs.utils.CommonUtils;
 import com.qs.utils.ConvertUtil;
 import com.qs.utils.VideoExceptionUtils;
@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UploadController {
 
     @Autowired
-    private UploadService uploadService;
+    private UploadServiceImpl uploadServiceImpl;
 
     /**
      * 接收文件上传
@@ -44,7 +44,7 @@ public class UploadController {
             MultipartHttpServletRequest multipartRequest= (MultipartHttpServletRequest) request;
             MultipartFile multipartFile = multipartRequest.getFile("file");
             // 处理视频上传
-            String url = uploadService.execUpload(multipartFile);
+            String url = uploadServiceImpl.execUpload(multipartFile);
             resultVO.setData(url);
         } catch (Exception e) {
             log.error("上传视频接收报错,错误原因：" + e.getMessage(), e);
@@ -74,9 +74,9 @@ public class UploadController {
 
         // 文件不走分块上传
         if(ConvertUtil.getInt(blockNumber) == 1){
-            uploadService.uploadOneBlockFile(multipartFile, targetFilePath);
+            uploadServiceImpl.uploadOneBlockFile(multipartFile, targetFilePath);
         }else if(ConvertUtil.getInt(blockNumber) > 1) {
-            uploadService.uploadMultiBlockFile(multipartFile, blockIndex, blockNumber, randomUUID, targetFilePath);
+            uploadServiceImpl.uploadMultiBlockFile(multipartFile, blockIndex, blockNumber, randomUUID, targetFilePath);
         }
 
         return CommonUtils.getResultVOByCodeEnum(VideoCodeEnum.UPLOAD_SUCCESS);

@@ -1,6 +1,6 @@
-package com.qs.manager;
+package com.qs.service;
 
-import com.qs.config.AbstractFFmpegConfig;
+import com.qs.dto.config.BaseFastForwardMovingPictureExpertsGroupConfig;
 import com.qs.model.TaskModel;
 
 import java.util.Collection;
@@ -33,11 +33,11 @@ public interface FfmpegManager {
 	/**
 	 * 通过组装命令发布任务
 	 * 
-	 * @param abstractFFmpegConfig -组装命令所需配置
+	 * @param baseFastForwardMovingPictureExpertsGroupConfig -组装命令所需配置
 	 *
 	 * @return
 	 */
-	String start(AbstractFFmpegConfig abstractFFmpegConfig);
+	String start(BaseFastForwardMovingPictureExpertsGroupConfig baseFastForwardMovingPictureExpertsGroupConfig);
 	
 	/**
 	 * 停止任务

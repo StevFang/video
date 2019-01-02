@@ -1,16 +1,17 @@
-package com.qs.manager;
+package com.qs.service.manager;
 
-import com.qs.config.AbstractFFmpegConfig;
-import com.qs.config.FfmpegDecodeConfig;
-import com.qs.config.FfmpegLiveConfig;
 import com.qs.dao.TaskDao;
+import com.qs.dto.config.BaseFastForwardMovingPictureExpertsGroupConfig;
+import com.qs.dto.config.FastForwardMovingPictureExpertsGroupDecodeConfig;
+import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveConfig;
 import com.qs.model.TaskModel;
 import com.qs.service.CommandService;
-import com.qs.service.impl.TaskHandlerImpl;
+import com.qs.service.FfmpegManager;
+import com.qs.service.handler.TaskHandlerImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Collection;
@@ -24,7 +25,7 @@ import java.util.Iterator;
  * @author fbin
  */
 @Slf4j
-@Component("ffmpegManager")
+@Service
 public class FfmpegManagerImpl implements FfmpegManager {
 
 	/**
@@ -51,9 +52,9 @@ public class FfmpegManagerImpl implements FfmpegManager {
 	@Resource(name = "ffmpegDecodeCommandService")
 	private CommandService ffmpegDecodeCommandService;
 
-	private FfmpegLiveConfig ffmpegLiveConfig = null;
+	private FastForwardMovingPictureExpertsGroupLiveConfig fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig = null;
 
-	private FfmpegDecodeConfig ffmpegDecodeConfig = null;
+	private FastForwardMovingPictureExpertsGroupDecodeConfig fastForwardMovingPictureExpertsGroupDecodeConfigConfig = null;
 
 	@Override
 	public String start(String appName, String command) {
@@ -64,7 +65,7 @@ public class FfmpegManagerImpl implements FfmpegManager {
 	public String start(String appName, String command, boolean hasPath) {
 		log.info("command= "+ command);
 		if (appName != null && command != null) {
-			TaskModel task = taskHandler.process(appName, hasPath ? command : ffmpegLiveConfig.getFfmpegPath() + command);
+			TaskModel task = taskHandler.process(appName, hasPath ? command : fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.getFfmpegPath() + command);
 			if (task != null) {
 				int ret = taskDao.add(task);
 				if (ret > 0) {
@@ -79,23 +80,23 @@ public class FfmpegManagerImpl implements FfmpegManager {
 	}
 
 	@Override
-	public String start(AbstractFFmpegConfig abstractFFmpegConfig) {
+	public String start(BaseFastForwardMovingPictureExpertsGroupConfig baseFastForwardMovingPictureExpertsGroupConfig) {
 
 		String commandLine = null;
 
-		if(abstractFFmpegConfig instanceof FfmpegLiveConfig){
+		if(baseFastForwardMovingPictureExpertsGroupConfig instanceof FastForwardMovingPictureExpertsGroupLiveConfig){
 			// 直播配置
-			this.ffmpegLiveConfig = (FfmpegLiveConfig) abstractFFmpegConfig;
-			commandLine = ffmpegOnlineCommandService.createCommand(ffmpegLiveConfig);
+			this.fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig = (FastForwardMovingPictureExpertsGroupLiveConfig) baseFastForwardMovingPictureExpertsGroupConfig;
+			commandLine = ffmpegOnlineCommandService.createCommand(fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig);
 			if (StringUtils.isNotBlank(commandLine)) {
-				return start(ffmpegLiveConfig.getAppName(), commandLine, true);
+				return start(fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.getAppName(), commandLine, true);
 			}
-		}else if(abstractFFmpegConfig instanceof FfmpegDecodeConfig){
+		}else if(baseFastForwardMovingPictureExpertsGroupConfig instanceof FastForwardMovingPictureExpertsGroupDecodeConfig){
 			// 转码配置
-			this.ffmpegDecodeConfig = (FfmpegDecodeConfig) abstractFFmpegConfig;
-			commandLine = ffmpegDecodeCommandService.createCommand(ffmpegDecodeConfig);
+			this.fastForwardMovingPictureExpertsGroupDecodeConfigConfig = (FastForwardMovingPictureExpertsGroupDecodeConfig) baseFastForwardMovingPictureExpertsGroupConfig;
+			commandLine = ffmpegDecodeCommandService.createCommand(fastForwardMovingPictureExpertsGroupDecodeConfigConfig);
 			if (StringUtils.isNotBlank(commandLine)) {
-				return start(ffmpegDecodeConfig.getAppName(), commandLine, true);
+				return start(fastForwardMovingPictureExpertsGroupDecodeConfigConfig.getAppName(), commandLine, true);
 			}
 		}
 

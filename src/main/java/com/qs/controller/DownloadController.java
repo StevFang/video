@@ -1,6 +1,6 @@
 package com.qs.controller;
 
-import com.qs.service.DownloadService;
+import com.qs.service.download.DownloadServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 public class DownloadController {
 
     @Autowired
-    private DownloadService downloadService;
+    private DownloadServiceImpl downloadServiceImpl;
 
     /**
      * 通用下载

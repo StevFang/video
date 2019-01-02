@@ -2,9 +2,9 @@ package com.qs.controller;
 
 import com.google.common.collect.Lists;
 import com.qs.common.DataTable;
-import com.qs.config.FfmpegLiveConfig;
+import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveConfig;
 import com.qs.enums.VideoCodeEnum;
-import com.qs.service.VideoService;
+import com.qs.service.video.VideoServiceImpl;
 import com.qs.utils.CommonUtils;
 import com.qs.vo.*;
 import com.qs.ws.ResultVO;
@@ -35,7 +35,7 @@ public class VideoController {
     private String ffmpegPath;
 
     @Autowired
-    private VideoService videoService;
+    private VideoServiceImpl videoServiceImpl;
 
     /**
      * 获取视频展示列表
@@ -46,10 +46,10 @@ public class VideoController {
     @RequestMapping(value = "/all", method = { RequestMethod.GET })
     public ResultVO findAll(@RequestParam(value = "query", required = false) VideoReqVO videoReqVO){
         try{
-            int total = videoService.findCount(videoReqVO);
+            int total = videoServiceImpl.findCount(videoReqVO);
             List<Map<String, Object>> dataList = Lists.newArrayList();
             if(total > 0){
-                dataList = videoService.findList(videoReqVO);
+                dataList = videoServiceImpl.findList(videoReqVO);
             }
             DataTable dataTable = DataTable.getInstance(videoReqVO, total, dataList);
             ResultVO resultVO = CommonUtils.getResultVOByCodeEnum(VideoCodeEnum.QUERY_SUCCESS);
@@ -71,16 +71,16 @@ public class VideoController {
     @RequestMapping(value = "/live")
     public ResultVO live(LiveReqVO liveReqVO){
         try{
-            FfmpegLiveConfig ffmpegLiveConfig = FfmpegLiveConfig.getInstanceOf(liveReqVO, ffmpegPath);
+            FastForwardMovingPictureExpertsGroupLiveConfig fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig = FastForwardMovingPictureExpertsGroupLiveConfig.getInstanceOf(liveReqVO, ffmpegPath);
             // ffmpeg环境是否配置正确
-            if (ffmpegLiveConfig == null) {
+            if (fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig == null) {
                 return CommonUtils.getResultVOByCodeEnum(VideoCodeEnum.CONFIG_ERROR);
             }
             // 参数是否符合要求
-            if (StringUtils.isBlank(ffmpegLiveConfig.getAppName())) {
+            if (StringUtils.isBlank(fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.getAppName())) {
                 return CommonUtils.getResultVOByCodeEnum(VideoCodeEnum.PARAM_CHECK_ERROR);
             }
-            LiveRespVO liveStream = videoService.livePushStream(ffmpegLiveConfig);
+            LiveRespVO liveStream = videoServiceImpl.livePushStream(fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig);
 
             ResultVO resultVO = CommonUtils.getResultVOByCodeEnum(VideoCodeEnum.LIVE_SUCCESS);
             resultVO.setData(liveStream);
@@ -101,7 +101,7 @@ public class VideoController {
     @RequestMapping(value = "/decode", method = { RequestMethod.POST })
     public ResultVO videoDecode(DecodeReqVO decodeReqVO){
         try{
-            DecodeRespVO decodeRespVO = videoService.decodeVideo(decodeReqVO);
+            DecodeRespVO decodeRespVO = videoServiceImpl.decodeVideo(decodeReqVO);
 
             ResultVO resultVO = CommonUtils.getResultVOByCodeEnum(VideoCodeEnum.VIDEO_DECODE_SUCCESS);
             resultVO.setData(decodeRespVO);

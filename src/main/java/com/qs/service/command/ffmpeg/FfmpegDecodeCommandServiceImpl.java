@@ -1,11 +1,10 @@
-package com.qs.service.impl;
+package com.qs.service.command.ffmpeg;
 
-import com.qs.config.FfmpegDecodeConfig;
+import com.qs.dto.config.FastForwardMovingPictureExpertsGroupDecodeConfig;
 import com.qs.service.CommandService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,32 +13,29 @@ import java.io.InputStream;
 /**
  * 创建ffmpeg 视频转码 指令
  *
+ * @author FBin
  */
-@Component("ffmpegDecodeCommandService")
-public class FFmpegDecodeCommandServiceImpl implements CommandService<FfmpegDecodeConfig> {
-
-    /**
-     * 记录日志
-     */
-    private static Logger logger = LoggerFactory.getLogger(FFmpegDecodeCommandServiceImpl.class);
+@Slf4j
+@Service
+public class FfmpegDecodeCommandServiceImpl implements CommandService<FastForwardMovingPictureExpertsGroupDecodeConfig> {
 
     @Override
-    public String createCommand(FfmpegDecodeConfig fFmpegDecodeConfig) {
-        String sourcePath = fFmpegDecodeConfig.getSourcePath();
+    public String createCommand(FastForwardMovingPictureExpertsGroupDecodeConfig config) {
+        String sourcePath = config.getSourcePath();
         // 校验是否是文件
-        if(!checkfile(sourcePath)){
+        if(!checkFile(sourcePath)){
             return null;
         }
         // 校验视频类型
         int type = checkVideoType(sourcePath);
         if(type == 0){
             // 可以通过ffmpeg转码的视频类型
-            return getFFmpegCommand(fFmpegDecodeConfig);
+            return getFastForwardMPEGCommand(config);
         }else if(type == 1){
             // 不可以通过ffmpeg转码的视频类型，可以先用别的工具（mencoder）转换为avi(ffmpeg能解析的)格式.
-            sourcePath = processAVI(fFmpegDecodeConfig);
-            fFmpegDecodeConfig.setSourcePath(sourcePath);
-            return getFFmpegCommand(fFmpegDecodeConfig);
+            sourcePath = processAVI(config);
+            config.setSourcePath(sourcePath);
+            return getFastForwardMPEGCommand(config);
         }
         return null;
     }
@@ -49,7 +45,7 @@ public class FFmpegDecodeCommandServiceImpl implements CommandService<FfmpegDeco
      * @param path
      * @return
      */
-    private boolean checkfile(String path) {
+    private boolean checkFile(String path) {
         File file = new File(path);
         if (!file.isFile()) {
             return false;
@@ -100,7 +96,7 @@ public class FFmpegDecodeCommandServiceImpl implements CommandService<FfmpegDeco
      * @param config
      * @return
      */
-    private String processAVI(FfmpegDecodeConfig config) {
+    private String processAVI(FastForwardMovingPictureExpertsGroupDecodeConfig config) {
         StringBuilder command = new StringBuilder();
         command.append(config.getMemcoderPath()).append(" ");
         command.append(config.getSourcePath());
@@ -115,13 +111,13 @@ public class FFmpegDecodeCommandServiceImpl implements CommandService<FfmpegDeco
             InputStream error = process.getErrorStream();
             InputStream is = process.getInputStream();
             byte[] b = new byte[1024];
-            int readbytes = -1;
             try {
-                while((readbytes = error.read(b)) != -1){
-                    logger.info("FFMPEG视频转换进程错误信息："+new String(b,0,readbytes));
+                int readBytes;
+                while((readBytes = error.read(b)) != -1){
+                    log.info("FFMPEG视频转换进程错误信息："+new String(b,0,readBytes));
                 }
-                while((readbytes = is.read(b)) != -1){
-                    logger.info("FFMPEG视频转换进程输出内容为："+new String(b,0,readbytes));
+                while((readBytes = is.read(b)) != -1){
+                    log.info("FFMPEG视频转换进程输出内容为："+new String(b,0,readBytes));
                 }
             }catch (IOException e2){
 
@@ -141,12 +137,13 @@ public class FFmpegDecodeCommandServiceImpl implements CommandService<FfmpegDeco
      * @param config
      * @return
      */
-    private String getFFmpegCommand(FfmpegDecodeConfig config) {
+    private String getFastForwardMPEGCommand(FastForwardMovingPictureExpertsGroupDecodeConfig config) {
         String sourcePath = config.getSourcePath();
         try{
             StringBuilder command = new StringBuilder();
-            command.append(config.getFfmpegPath()).append(" -i ");
-            command.append(sourcePath);
+            command.append(config.getFfmpegPath())
+                    .append(" -i ")
+                    .append(sourcePath);
             // 音频码率
             if(StringUtils.isNotBlank(config.getBitrate())){
                 command.append(" -ab ").append(config.getBitrate());
@@ -167,11 +164,14 @@ public class FFmpegDecodeCommandServiceImpl implements CommandService<FfmpegDeco
             if(StringUtils.isNotBlank(config.getRs())){
                 command.append(" -s ").append(config.getRs());
             }
-            command.append(" " + config.getTargetPath() + config.getTargetName() + config.getFmt());
+            command.append(" ")
+                    .append(config.getTargetPath())
+                    .append(config.getTargetName())
+                    .append(config.getFmt());
 
             return command.toString();
         }catch (Exception e){
-            logger.error("FFmpeg视频解码异常", e);
+            log.error("FFmpeg视频解码异常", e);
             return null;
         }
     }

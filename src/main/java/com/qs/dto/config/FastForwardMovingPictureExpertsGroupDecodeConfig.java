@@ -1,4 +1,4 @@
-package com.qs.config;
+package com.qs.dto.config;
 
 import com.qs.vo.DecodeReqVO;
 import com.qs.utils.ConvertUtil;
@@ -10,7 +10,7 @@ import lombok.Data;
  * @author FBin
  */
 @Data
-public class FfmpegDecodeConfig extends AbstractFFmpegConfig {
+public class FastForwardMovingPictureExpertsGroupDecodeConfig extends BaseFastForwardMovingPictureExpertsGroupConfig {
 
     /**
      * ffmpeg 路径
@@ -77,7 +77,7 @@ public class FfmpegDecodeConfig extends AbstractFFmpegConfig {
      */
     private String rs;
 
-    private FfmpegDecodeConfig(){
+    private FastForwardMovingPictureExpertsGroupDecodeConfig(){
 
     }
 
@@ -88,8 +88,8 @@ public class FfmpegDecodeConfig extends AbstractFFmpegConfig {
      * @param memcoderPath
      * @return
      */
-    public static FfmpegDecodeConfig getInstanceOf(DecodeReqVO decodeReqVO, String ffmpegPath, String memcoderPath, String savePath) {
-        FfmpegDecodeConfig config = new FfmpegDecodeConfig();
+    public static FastForwardMovingPictureExpertsGroupDecodeConfig getInstanceOf(DecodeReqVO decodeReqVO, String ffmpegPath, String memcoderPath, String savePath) {
+        FastForwardMovingPictureExpertsGroupDecodeConfig config = new FastForwardMovingPictureExpertsGroupDecodeConfig();
         config.setFfmpegPath(ffmpegPath);
         config.setMemcoderPath(memcoderPath);
         config.setVideoId(decodeReqVO.getVideoId());

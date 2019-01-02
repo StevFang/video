@@ -8,6 +8,11 @@ package com.qs.common;
  */
 public class CommonConstant {
 
-
+    /**
+     * twoPart：0-推一个元码流；1-推一个自定义推流；2-推两个流（一个是自定义，一个是元码）
+     */
+    public static final String TWO_PART_0 = "0";
+    public static final String TWO_PART_1 = "1";
+    public static final String TWO_PART_2 = "2";
 
 }

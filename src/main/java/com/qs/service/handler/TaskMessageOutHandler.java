@@ -1,9 +1,7 @@
-package com.qs.threads;
+package com.qs.service.handler;
 
 import com.qs.service.OutHandlerMethod;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,17 +14,17 @@ import java.io.InputStreamReader;
  * @author fbin
  */
 @Slf4j
-public class OutHandler extends Thread {
+public class TaskMessageOutHandler extends Thread {
 
     /**
      * 控制状态
      */
-    private boolean desstatus = true;
+    private boolean status = true;
 
     /**
      * 读取输出流
      */
-    private BufferedReader br;
+    private BufferedReader bufferedReader;
 
     /**
      * 输出类型
@@ -36,16 +34,16 @@ public class OutHandler extends Thread {
     /**
      * 消息处理方法
      */
-    private OutHandlerMethod ohm;
+    private OutHandlerMethod outHandlerMethod;
 
-    public void setDesStatus(boolean desStatus) {
-        this.desstatus = desStatus;
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
-    public OutHandler(InputStream is, String appName, OutHandlerMethod ohm) {
-        br = new BufferedReader(new InputStreamReader(is));
+    public TaskMessageOutHandler(InputStream is, String appName, OutHandlerMethod outHandlerMethod) {
+        bufferedReader = new BufferedReader(new InputStreamReader(is));
         this.appName = appName;
-        this.ohm = ohm;
+        this.outHandlerMethod = outHandlerMethod;
     }
 
 
@@ -54,7 +52,7 @@ public class OutHandler extends Thread {
      */
     @Override
     public void interrupt() {
-        setDesStatus(false);
+        setStatus(false);
     }
 
     /**
@@ -64,8 +62,8 @@ public class OutHandler extends Thread {
     public void run() {
         String msg;
         try {
-            while (desstatus && (msg = br.readLine()) != null) {
-                ohm.parse(appName, msg);
+            while (status && (msg = bufferedReader.readLine()) != null) {
+                outHandlerMethod.parse(appName, msg);
             }
         } catch (IOException e) {
             log.error("发生内部异常错误，自动关闭[" + this.getId() + "]线程");

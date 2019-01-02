@@ -1,15 +1,8 @@
 package com.qs.service;
 
-import org.springframework.stereotype.Service;
-
 /**
- * 下载服务类
- *
- * Created by fbin on 2018/6/1.
+ * @author FBin
+ * @time 2019/1/2 15:53
  */
-@Service("downloadService")
-public class DownloadService {
-
-
-
+public interface DownloadService {
 }
