@@ -5,7 +5,7 @@ import com.qs.service.upload.UploadServiceImpl;
 import com.qs.utils.CommonUtils;
 import com.qs.utils.ConvertUtil;
 import com.qs.utils.VideoExceptionUtils;
-import com.qs.ws.ResultVO;
+import com.qs.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UploadController {
 
     @Autowired
-    private UploadServiceImpl uploadServiceImpl;
+    private UploadServiceImpl uploadService;
 
     /**
      * 接收文件上传
@@ -44,7 +44,7 @@ public class UploadController {
             MultipartHttpServletRequest multipartRequest= (MultipartHttpServletRequest) request;
             MultipartFile multipartFile = multipartRequest.getFile("file");
             // 处理视频上传
-            String url = uploadServiceImpl.execUpload(multipartFile);
+            String url = uploadService.execUpload(multipartFile);
             resultVO.setData(url);
         } catch (Exception e) {
             log.error("上传视频接收报错,错误原因：" + e.getMessage(), e);
@@ -74,9 +74,9 @@ public class UploadController {
 
         // 文件不走分块上传
         if(ConvertUtil.getInt(blockNumber) == 1){
-            uploadServiceImpl.uploadOneBlockFile(multipartFile, targetFilePath);
+            uploadService.uploadOneBlockFile(multipartFile, targetFilePath);
         }else if(ConvertUtil.getInt(blockNumber) > 1) {
-            uploadServiceImpl.uploadMultiBlockFile(multipartFile, blockIndex, blockNumber, randomUUID, targetFilePath);
+            uploadService.uploadMultiBlockFile(multipartFile, blockIndex, blockNumber, randomUUID, targetFilePath);
         }
 
         return CommonUtils.getResultVOByCodeEnum(VideoCodeEnum.UPLOAD_SUCCESS);

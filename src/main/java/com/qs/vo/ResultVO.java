@@ -1,4 +1,4 @@
-package com.qs.ws;
+package com.qs.vo;
 
 import lombok.Builder;
 import lombok.Data;

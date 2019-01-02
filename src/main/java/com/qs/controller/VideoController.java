@@ -7,7 +7,7 @@ import com.qs.enums.VideoCodeEnum;
 import com.qs.service.video.VideoServiceImpl;
 import com.qs.utils.CommonUtils;
 import com.qs.vo.*;
-import com.qs.ws.ResultVO;
+import com.qs.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class VideoController {
     private String ffmpegPath;
 
     @Autowired
-    private VideoServiceImpl videoServiceImpl;
+    private VideoServiceImpl videoService;
 
     /**
      * 获取视频展示列表
@@ -46,10 +46,10 @@ public class VideoController {
     @RequestMapping(value = "/all", method = { RequestMethod.GET })
     public ResultVO findAll(@RequestParam(value = "query", required = false) VideoReqVO videoReqVO){
         try{
-            int total = videoServiceImpl.findCount(videoReqVO);
+            int total = videoService.findCount(videoReqVO);
             List<Map<String, Object>> dataList = Lists.newArrayList();
             if(total > 0){
-                dataList = videoServiceImpl.findList(videoReqVO);
+                dataList = videoService.findList(videoReqVO);
             }
             DataTable dataTable = DataTable.getInstance(videoReqVO, total, dataList);
             ResultVO resultVO = CommonUtils.getResultVOByCodeEnum(VideoCodeEnum.QUERY_SUCCESS);
@@ -80,7 +80,7 @@ public class VideoController {
             if (StringUtils.isBlank(fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.getAppName())) {
                 return CommonUtils.getResultVOByCodeEnum(VideoCodeEnum.PARAM_CHECK_ERROR);
             }
-            LiveRespVO liveStream = videoServiceImpl.livePushStream(fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig);
+            LiveRespVO liveStream = videoService.livePushStream(fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig);
 
             ResultVO resultVO = CommonUtils.getResultVOByCodeEnum(VideoCodeEnum.LIVE_SUCCESS);
             resultVO.setData(liveStream);
@@ -101,7 +101,7 @@ public class VideoController {
     @RequestMapping(value = "/decode", method = { RequestMethod.POST })
     public ResultVO videoDecode(DecodeReqVO decodeReqVO){
         try{
-            DecodeRespVO decodeRespVO = videoServiceImpl.decodeVideo(decodeReqVO);
+            DecodeRespVO decodeRespVO = videoService.decodeVideo(decodeReqVO);
 
             ResultVO resultVO = CommonUtils.getResultVOByCodeEnum(VideoCodeEnum.VIDEO_DECODE_SUCCESS);
             resultVO.setData(decodeRespVO);

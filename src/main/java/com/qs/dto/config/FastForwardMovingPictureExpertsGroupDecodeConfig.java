@@ -96,9 +96,7 @@ public class FastForwardMovingPictureExpertsGroupDecodeConfig extends BaseFastFo
         config.setAppName(decodeReqVO.getAppName());
         config.setSourcePath(decodeReqVO.getSourcePath());
         config.setTargetPath(savePath);
-        // 目标文件命名
-        String targetName = ConvertUtil.getBase64Time();
-        config.setTargetName(targetName);
+        config.setTargetName(ConvertUtil.getFormatUUID());
         config.setFmt(decodeReqVO.getFmt());
         config.setBitrate(decodeReqVO.getBitrate());
         config.setFreq(decodeReqVO.getFreq());

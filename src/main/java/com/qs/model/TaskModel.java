@@ -7,11 +7,20 @@ package com.qs.model;
  */
 public class TaskModel {
 
-    private final String id;//任务id
+    /**
+     * 任务id
+     */
+    private String id;
 
-    private final Process process;//任务主进程
+    /**
+     * 任务主进程
+     */
+    private Process process;
 
-    private final Thread thread;//任务输出线程
+    /**
+     * 任务输出线程
+     */
+    private Thread thread;
 
     public TaskModel(String id, Process process, Thread thread) {
         this.id = id;

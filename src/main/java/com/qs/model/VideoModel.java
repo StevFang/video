@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 /**
  * 视频信息
+ *
+ * @author FBin
  */
 @Data
 @NoArgsConstructor
@@ -14,12 +16,24 @@ import lombok.NoArgsConstructor;
 @Builder
 public class VideoModel {
 
+    /**
+     * 视频Id
+     */
     private String videoId;
 
+    /**
+     * 视频访问路径
+     */
     private String videoPath;
 
+    /**
+     * 视频名称
+     */
     private String videoName;
 
+    /**
+     * 视频类型
+     */
     private String videoType;
 
 }

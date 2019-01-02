@@ -1,6 +1,7 @@
 package com.qs.common;
 
 import com.qs.dto.QueryParamDto;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
@@ -9,25 +10,37 @@ import java.util.Map;
 /**
  * 数据表格
  *
- * Created by fbin on 2018/6/2.
+ * @author FBin
+ * @version 2018/6/2.
  */
 @Data
+@Builder
 public class DataTable {
 
-    // 总记录数
+    /**
+     * 总记录数
+     */
     private long total;
 
-    // 数据集
+    /**
+     * 数据集
+     */
     private List<Map<String, Object>> datas;
 
-    // 当前页码
-    private long num;
+    /**
+     * 当前页码
+     */
+    private int num;
 
-    // 每页记录数
-    private long rows;
+    /**
+     * 每页记录数
+     */
+    private int rows;
 
-    // 总页数
-    private long pages;
+    /**
+     * 总页数
+     */
+    private int pages;
 
     private DataTable(){
 
@@ -37,14 +50,14 @@ public class DataTable {
      * 获取实例
      * @param queryParamDto 查询信息
      * @param total 总数量
-     * @param datas 数据集
+     * @param dataList 数据集
      * @return
      */
     public static DataTable getInstance(QueryParamDto queryParamDto,
-                                        int total, List<Map<String, Object>> datas) {
+                                        int total, List<Map<String, Object>> dataList) {
         DataTable dataTable = new DataTable();
         dataTable.setTotal(total);
-        dataTable.setDatas(datas);
+        dataTable.setDatas(dataList);
         dataTable.setNum(queryParamDto.getNum());
         dataTable.setRows(queryParamDto.getRows());
         dataTable.setPages(calPages(total, queryParamDto.getRows()));
@@ -58,7 +71,7 @@ public class DataTable {
      * @param rows
      * @return
      */
-    private static long calPages(long total, long rows){
+    private static int calPages(int total, int rows){
         if(total > 0){
             if(total >= rows){
                 return Math.floorMod(total, rows) > 0 ?

@@ -4,6 +4,7 @@ import org.apache.commons.codec.binary.Base64;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 /**
  * 转换工具类
@@ -47,6 +48,15 @@ public class ConvertUtil {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssS");
         String localDateTimeStr = LocalDateTime.now().format(dateTimeFormatter);
         return Base64.encodeBase64String(localDateTimeStr.getBytes());
+    }
+
+    /**
+     * 获取格式化后的UUID
+     *
+     * @return
+     */
+    public static String getFormatUUID(){
+        return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
 }

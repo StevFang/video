@@ -12,13 +12,13 @@ import lombok.Data;
 @Data
 public class QueryParamDto {
 
-    protected long num = 0;
+    protected int num = 0;
 
-    protected long rows = 0;
+    protected int rows = 0;
 
     protected String[] sorts;
 
-    protected long getStart(){
+    protected int getStart(){
         return rows * (num - 1);
     }
 

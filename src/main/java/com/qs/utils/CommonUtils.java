@@ -1,7 +1,7 @@
 package com.qs.utils;
 
 import com.qs.enums.VideoCodeEnum;
-import com.qs.ws.ResultVO;
+import com.qs.vo.ResultVO;
 
 /**
  * 通用工具类

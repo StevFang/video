@@ -66,19 +66,20 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public DecodeRespVO decodeVideo(DecodeReqVO decodeReqVO) {
 
-        FastForwardMovingPictureExpertsGroupDecodeConfig fastForwardMovingPictureExpertsGroupDecodeConfigConfig = FastForwardMovingPictureExpertsGroupDecodeConfig.getInstanceOf(decodeReqVO, ffmpegPath, memcoderPath, savePath);
+        FastForwardMovingPictureExpertsGroupDecodeConfig config =
+                FastForwardMovingPictureExpertsGroupDecodeConfig.getInstanceOf(decodeReqVO, ffmpegPath, memcoderPath, savePath);
 
         // ffmpeg环境是否配置正确
-        if (fastForwardMovingPictureExpertsGroupDecodeConfigConfig == null) {
+        if (config == null) {
             log.error("配置未正确加载，无法执行");
             return new DecodeRespVO(decodeReqVO.getVideoId(), "配置未正确加载，无法执行");
         }
         // 参数是否符合要求
-        if (StringUtils.isBlank(fastForwardMovingPictureExpertsGroupDecodeConfigConfig.getAppName())) {
+        if (StringUtils.isBlank(config.getAppName())) {
             log.error("参数不正确，无法执行");
             return new DecodeRespVO(decodeReqVO.getVideoId(), "参数不正确，无法执行");
         }
-        ffmpegManager.start(fastForwardMovingPictureExpertsGroupDecodeConfigConfig);
+        ffmpegManager.start(config);
 
         return new DecodeRespVO(decodeReqVO.getVideoId(), "正在处理中，请稍后");
     }

@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 public class DownloadController {
 
     @Autowired
-    private DownloadServiceImpl downloadServiceImpl;
+    private DownloadServiceImpl downloadService;
 
     /**
      * 通用下载
