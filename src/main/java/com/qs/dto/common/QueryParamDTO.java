@@ -1,4 +1,4 @@
-package com.qs.dto;
+package com.qs.dto.common;
 
 import lombok.Data;
 

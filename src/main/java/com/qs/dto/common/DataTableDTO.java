@@ -1,4 +1,4 @@
-package com.qs.dto;
+package com.qs.dto.common;
 
 import com.qs.utils.CommonUtils;
 import lombok.Builder;
@@ -13,7 +13,6 @@ import java.util.List;
  * @version 2018/6/2.
  */
 @Data
-@Builder
 public class DataTableDTO<T> {
 
     /**
@@ -52,9 +51,9 @@ public class DataTableDTO<T> {
      * @param dataList 数据集
      * @return
      */
-    public static <T> DataTableDTO<T> getInstance(QueryParamDTO queryParamDTO,
+    public static <T> DataTableDTO getInstance(QueryParamDTO queryParamDTO,
                                            int total, List<T> dataList) {
-        DataTableDTO dataTableDTO = new DataTableDTO();
+        DataTableDTO<T> dataTableDTO = new DataTableDTO<>();
         dataTableDTO.setTotal(total);
         dataTableDTO.setDataList(dataList);
         dataTableDTO.setNum(queryParamDTO.getCurrent());

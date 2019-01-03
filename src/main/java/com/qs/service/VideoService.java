@@ -5,6 +5,7 @@ import com.qs.vo.req.DecodeReqVO;
 import com.qs.vo.resp.DecodeRespVO;
 import com.qs.vo.resp.LiveRespVO;
 import com.qs.vo.req.VideoReqVO;
+import com.qs.vo.resp.VideoRespVO;
 
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public interface VideoService {
      * @param videoReqVO
      * @return
      */
-    List<Map<String, Object>> findList(VideoReqVO videoReqVO);
+    List<VideoRespVO> findList(VideoReqVO videoReqVO);
 
     /**
      * 视频解码转码

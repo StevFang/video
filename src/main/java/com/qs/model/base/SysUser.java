@@ -1,27 +1,26 @@
-package com.qs.vo.resp;
+package com.qs.model.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
- * 通用调用返参
- *
- * Created by fbin on 2018/5/30.
+ * 系统用户
  *
  * @author FBin
+ * @time 2019/1/4 1:10
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class VideoRespVO {
+public class SysUser implements Serializable {
 
-    public String code;
+    private Long oid;
 
-    public String msg;
-
-    public Object data;
+    private String userName;
 
 }

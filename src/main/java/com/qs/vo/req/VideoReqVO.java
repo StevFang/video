@@ -1,6 +1,6 @@
 package com.qs.vo.req;
 
-import com.qs.dto.QueryParamDTO;
+import com.qs.dto.common.QueryParamDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

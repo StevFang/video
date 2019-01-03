@@ -1,17 +1,17 @@
 package com.qs.controller;
 
 import com.google.common.collect.Lists;
-import com.qs.dto.DataTableDTO;
+import com.qs.dto.common.DataTableDTO;
 import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveDTO;
 import com.qs.enums.VideoCodeEnum;
-import com.qs.service.video.VideoServiceImpl;
+import com.qs.service.VideoService;
 import com.qs.utils.CommonUtils;
-import com.qs.vo.resp.DecodeRespVO;
-import com.qs.vo.resp.LiveRespVO;
-import com.qs.vo.resp.VideoRespVO;
 import com.qs.vo.req.DecodeReqVO;
 import com.qs.vo.req.LiveReqVO;
 import com.qs.vo.req.VideoReqVO;
+import com.qs.vo.resp.DecodeRespVO;
+import com.qs.vo.resp.LiveRespVO;
+import com.qs.vo.resp.VideoRespVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 视频服务中心
@@ -39,7 +38,7 @@ public class VideoController {
     private String ffmpegPath;
 
     @Autowired
-    private VideoServiceImpl videoService;
+    private VideoService videoService;
 
     /**
      * 获取视频展示列表
@@ -51,7 +50,7 @@ public class VideoController {
     public VideoRespVO findAll(@RequestParam(value = "query", required = false) VideoReqVO videoReqVO){
         try{
             int total = videoService.findCount(videoReqVO);
-            List<Map<String, Object>> dataList = Lists.newArrayList();
+            List<VideoRespVO> dataList = Lists.newArrayList();
             if(total > 0){
                 dataList = videoService.findList(videoReqVO);
             }

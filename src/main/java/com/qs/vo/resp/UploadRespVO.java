@@ -1,4 +1,4 @@
-package com.qs.dto;
+package com.qs.vo.resp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UploadRespDTO {
+public class UploadRespVO {
 
     private String url;
 

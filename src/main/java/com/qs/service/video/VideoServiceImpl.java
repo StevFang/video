@@ -1,22 +1,22 @@
 package com.qs.service.video;
 
+import com.google.common.collect.Lists;
 import com.qs.dto.config.FastForwardMovingPictureExpertsGroupDecodeDTO;
 import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveDTO;
-import com.qs.service.manager.FfmpegManagerImpl;
 import com.qs.service.VideoService;
+import com.qs.service.manager.FfmpegManagerImpl;
 import com.qs.vo.req.DecodeReqVO;
 import com.qs.vo.req.VideoReqVO;
 import com.qs.vo.resp.DecodeRespVO;
 import com.qs.vo.resp.LiveRespVO;
+import com.qs.vo.resp.VideoRespVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 视频处理业务类
@@ -57,8 +57,8 @@ public class VideoServiceImpl implements VideoService {
      * @return
      */
     @Override
-    public List<Map<String, Object>> findList(VideoReqVO videoReqVO) {
-        return new ArrayList<>();
+    public List<VideoRespVO> findList(VideoReqVO videoReqVO) {
+        return Lists.newArrayList();
     }
 
     /**
