@@ -1,6 +1,6 @@
 package com.qs.service.command.ffmpeg;
 
-import com.qs.dto.config.FastForwardMovingPictureExpertsGroupDecodeConfig;
+import com.qs.dto.config.FastForwardMovingPictureExpertsGroupDecodeDTO;
 import com.qs.service.CommandService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -17,10 +17,10 @@ import java.io.InputStream;
  */
 @Slf4j
 @Service
-public class FfmpegDecodeCommandServiceImpl implements CommandService<FastForwardMovingPictureExpertsGroupDecodeConfig> {
+public class FfmpegDecodeCommandServiceImpl implements CommandService<FastForwardMovingPictureExpertsGroupDecodeDTO> {
 
     @Override
-    public String createCommand(FastForwardMovingPictureExpertsGroupDecodeConfig config) {
+    public String createCommand(FastForwardMovingPictureExpertsGroupDecodeDTO config) {
         String sourcePath = config.getSourcePath();
         // 校验是否是文件
         if(!checkFile(sourcePath)){
@@ -96,7 +96,7 @@ public class FfmpegDecodeCommandServiceImpl implements CommandService<FastForwar
      * @param config
      * @return
      */
-    private String processAVI(FastForwardMovingPictureExpertsGroupDecodeConfig config) {
+    private String processAVI(FastForwardMovingPictureExpertsGroupDecodeDTO config) {
         StringBuilder command = new StringBuilder();
         command.append(config.getMemcoderPath()).append(" ");
         command.append(config.getSourcePath());
@@ -137,7 +137,7 @@ public class FfmpegDecodeCommandServiceImpl implements CommandService<FastForwar
      * @param config
      * @return
      */
-    private String getFastForwardMPEGCommand(FastForwardMovingPictureExpertsGroupDecodeConfig config) {
+    private String getFastForwardMPEGCommand(FastForwardMovingPictureExpertsGroupDecodeDTO config) {
         String sourcePath = config.getSourcePath();
         try{
             StringBuilder command = new StringBuilder();

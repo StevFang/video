@@ -1,6 +1,6 @@
 package com.qs.service;
 
-import com.qs.dto.config.BaseFastForwardMovingPictureExpertsGroupConfig;
+import com.qs.dto.config.BaseFastForwardMovingPictureExpertsGroupDTO;
 import com.qs.model.TaskModel;
 
 import java.util.Collection;
@@ -33,11 +33,11 @@ public interface FfmpegManager {
 	/**
 	 * 通过组装命令发布任务
 	 * 
-	 * @param baseFastForwardMovingPictureExpertsGroupConfig -组装命令所需配置
+	 * @param baseFastForwardMovingPictureExpertsGroupDTO -组装命令所需配置
 	 *
 	 * @return
 	 */
-	String start(BaseFastForwardMovingPictureExpertsGroupConfig baseFastForwardMovingPictureExpertsGroupConfig);
+	String start(BaseFastForwardMovingPictureExpertsGroupDTO baseFastForwardMovingPictureExpertsGroupDTO);
 	
 	/**
 	 * 停止任务

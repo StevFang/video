@@ -1,7 +1,7 @@
 package com.qs.service.video;
 
-import com.qs.dto.config.FastForwardMovingPictureExpertsGroupDecodeConfig;
-import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveConfig;
+import com.qs.dto.config.FastForwardMovingPictureExpertsGroupDecodeDTO;
+import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveDTO;
 import com.qs.service.manager.FfmpegManagerImpl;
 import com.qs.service.VideoService;
 import com.qs.vo.req.DecodeReqVO;
@@ -69,8 +69,8 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public DecodeRespVO decodeVideo(DecodeReqVO decodeReqVO) {
 
-        FastForwardMovingPictureExpertsGroupDecodeConfig config =
-                FastForwardMovingPictureExpertsGroupDecodeConfig.getInstanceOf(decodeReqVO, ffmpegPath, memcoderPath, savePath);
+        FastForwardMovingPictureExpertsGroupDecodeDTO config =
+                FastForwardMovingPictureExpertsGroupDecodeDTO.getInstanceOf(decodeReqVO, ffmpegPath, memcoderPath, savePath);
 
         // ffmpeg环境是否配置正确
         if (config == null) {
@@ -93,7 +93,7 @@ public class VideoServiceImpl implements VideoService {
      * @return
      */
     @Override
-    public LiveRespVO livePushStream(FastForwardMovingPictureExpertsGroupLiveConfig fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig) {
+    public LiveRespVO livePushStream(FastForwardMovingPictureExpertsGroupLiveDTO fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig) {
         ffmpegManager.start(fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig);
         return LiveRespVO.builder().output(fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.getOutput()).message("推流成功").build();
     }

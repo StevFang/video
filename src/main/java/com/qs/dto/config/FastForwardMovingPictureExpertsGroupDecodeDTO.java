@@ -10,7 +10,7 @@ import lombok.Data;
  * @author FBin
  */
 @Data
-public class FastForwardMovingPictureExpertsGroupDecodeConfig extends BaseFastForwardMovingPictureExpertsGroupConfig {
+public class FastForwardMovingPictureExpertsGroupDecodeDTO extends BaseFastForwardMovingPictureExpertsGroupDTO {
 
     /**
      * ffmpeg 路径
@@ -77,7 +77,7 @@ public class FastForwardMovingPictureExpertsGroupDecodeConfig extends BaseFastFo
      */
     private String rs;
 
-    private FastForwardMovingPictureExpertsGroupDecodeConfig(){
+    private FastForwardMovingPictureExpertsGroupDecodeDTO(){
 
     }
 
@@ -88,8 +88,8 @@ public class FastForwardMovingPictureExpertsGroupDecodeConfig extends BaseFastFo
      * @param memcoderPath
      * @return
      */
-    public static FastForwardMovingPictureExpertsGroupDecodeConfig getInstanceOf(DecodeReqVO decodeReqVO, String ffmpegPath, String memcoderPath, String savePath) {
-        FastForwardMovingPictureExpertsGroupDecodeConfig config = new FastForwardMovingPictureExpertsGroupDecodeConfig();
+    public static FastForwardMovingPictureExpertsGroupDecodeDTO getInstanceOf(DecodeReqVO decodeReqVO, String ffmpegPath, String memcoderPath, String savePath) {
+        FastForwardMovingPictureExpertsGroupDecodeDTO config = new FastForwardMovingPictureExpertsGroupDecodeDTO();
         config.setFfmpegPath(ffmpegPath);
         config.setMemcoderPath(memcoderPath);
         config.setVideoId(decodeReqVO.getVideoId());

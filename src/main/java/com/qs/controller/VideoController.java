@@ -2,7 +2,7 @@ package com.qs.controller;
 
 import com.google.common.collect.Lists;
 import com.qs.dto.DataTableDTO;
-import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveConfig;
+import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveDTO;
 import com.qs.enums.VideoCodeEnum;
 import com.qs.service.video.VideoServiceImpl;
 import com.qs.utils.CommonUtils;
@@ -75,7 +75,7 @@ public class VideoController {
     @RequestMapping(value = "/live")
     public VideoRespVO live(LiveReqVO liveReqVO){
         try{
-            FastForwardMovingPictureExpertsGroupLiveConfig fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig = FastForwardMovingPictureExpertsGroupLiveConfig.getInstanceOf(liveReqVO, ffmpegPath);
+            FastForwardMovingPictureExpertsGroupLiveDTO fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig = FastForwardMovingPictureExpertsGroupLiveDTO.getInstanceOf(liveReqVO, ffmpegPath);
             // ffmpeg环境是否配置正确
             if (fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig == null) {
                 return CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.CONFIG_ERROR);

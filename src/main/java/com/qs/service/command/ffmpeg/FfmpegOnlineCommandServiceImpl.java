@@ -1,7 +1,7 @@
 package com.qs.service.command.ffmpeg;
 
 import com.qs.common.CommonConstant;
-import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveConfig;
+import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveDTO;
 import com.qs.service.CommandService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class FfmpegOnlineCommandServiceImpl implements CommandService<FastForwardMovingPictureExpertsGroupLiveConfig> {
+public class FfmpegOnlineCommandServiceImpl implements CommandService<FastForwardMovingPictureExpertsGroupLiveDTO> {
 
     @Override
-    public String createCommand(FastForwardMovingPictureExpertsGroupLiveConfig fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig) {
+    public String createCommand(FastForwardMovingPictureExpertsGroupLiveDTO fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig) {
         try{
             String fastForwardMPEGPath = fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.getFfmpegPath();
             if(StringUtils.isNotBlank(fastForwardMPEGPath)) {

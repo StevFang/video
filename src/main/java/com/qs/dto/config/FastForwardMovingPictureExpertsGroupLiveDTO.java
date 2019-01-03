@@ -9,7 +9,7 @@ import lombok.Data;
  * @author FBin
  */
 @Data
-public class FastForwardMovingPictureExpertsGroupLiveConfig extends BaseFastForwardMovingPictureExpertsGroupConfig {
+public class FastForwardMovingPictureExpertsGroupLiveDTO extends BaseFastForwardMovingPictureExpertsGroupDTO {
 
     /**
      * ffmpeg 路径
@@ -56,7 +56,7 @@ public class FastForwardMovingPictureExpertsGroupLiveConfig extends BaseFastForw
      */
     private String rs;
 
-    private FastForwardMovingPictureExpertsGroupLiveConfig(){
+    private FastForwardMovingPictureExpertsGroupLiveDTO(){
 
     }
 
@@ -66,8 +66,8 @@ public class FastForwardMovingPictureExpertsGroupLiveConfig extends BaseFastForw
      * @param ffmpegPath
      * @return
      */
-    public static FastForwardMovingPictureExpertsGroupLiveConfig getInstanceOf(LiveReqVO liveReqVO, String ffmpegPath) {
-        FastForwardMovingPictureExpertsGroupLiveConfig fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig = new FastForwardMovingPictureExpertsGroupLiveConfig();
+    public static FastForwardMovingPictureExpertsGroupLiveDTO getInstanceOf(LiveReqVO liveReqVO, String ffmpegPath) {
+        FastForwardMovingPictureExpertsGroupLiveDTO fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig = new FastForwardMovingPictureExpertsGroupLiveDTO();
         fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.setFfmpegPath(ffmpegPath);
         fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.setInput(liveReqVO.getInput());
         fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.setOutput(liveReqVO.getOutput());

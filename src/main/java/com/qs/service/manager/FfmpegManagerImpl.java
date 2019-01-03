@@ -1,9 +1,9 @@
 package com.qs.service.manager;
 
 import com.qs.dao.TaskDao;
-import com.qs.dto.config.BaseFastForwardMovingPictureExpertsGroupConfig;
-import com.qs.dto.config.FastForwardMovingPictureExpertsGroupDecodeConfig;
-import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveConfig;
+import com.qs.dto.config.BaseFastForwardMovingPictureExpertsGroupDTO;
+import com.qs.dto.config.FastForwardMovingPictureExpertsGroupDecodeDTO;
+import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveDTO;
 import com.qs.model.TaskModel;
 import com.qs.service.CommandService;
 import com.qs.service.FfmpegManager;
@@ -52,9 +52,9 @@ public class FfmpegManagerImpl implements FfmpegManager {
 	@Resource(name = "ffmpegDecodeCommandService")
 	private CommandService ffmpegDecodeCommandService;
 
-	private FastForwardMovingPictureExpertsGroupLiveConfig fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig = null;
+	private FastForwardMovingPictureExpertsGroupLiveDTO fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig = null;
 
-	private FastForwardMovingPictureExpertsGroupDecodeConfig fastForwardMovingPictureExpertsGroupDecodeConfigConfig = null;
+	private FastForwardMovingPictureExpertsGroupDecodeDTO fastForwardMovingPictureExpertsGroupDecodeConfigConfig = null;
 
 	@Override
 	public String start(String appName, String command) {
@@ -80,20 +80,20 @@ public class FfmpegManagerImpl implements FfmpegManager {
 	}
 
 	@Override
-	public String start(BaseFastForwardMovingPictureExpertsGroupConfig baseFastForwardMovingPictureExpertsGroupConfig) {
+	public String start(BaseFastForwardMovingPictureExpertsGroupDTO baseFastForwardMovingPictureExpertsGroupDTO) {
 
 		String commandLine = null;
 
-		if(baseFastForwardMovingPictureExpertsGroupConfig instanceof FastForwardMovingPictureExpertsGroupLiveConfig){
+		if(baseFastForwardMovingPictureExpertsGroupDTO instanceof FastForwardMovingPictureExpertsGroupLiveDTO){
 			// 直播配置
-			this.fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig = (FastForwardMovingPictureExpertsGroupLiveConfig) baseFastForwardMovingPictureExpertsGroupConfig;
+			this.fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig = (FastForwardMovingPictureExpertsGroupLiveDTO) baseFastForwardMovingPictureExpertsGroupDTO;
 			commandLine = ffmpegOnlineCommandService.createCommand(fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig);
 			if (StringUtils.isNotBlank(commandLine)) {
 				return start(fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.getAppName(), commandLine, true);
 			}
-		}else if(baseFastForwardMovingPictureExpertsGroupConfig instanceof FastForwardMovingPictureExpertsGroupDecodeConfig){
+		}else if(baseFastForwardMovingPictureExpertsGroupDTO instanceof FastForwardMovingPictureExpertsGroupDecodeDTO){
 			// 转码配置
-			this.fastForwardMovingPictureExpertsGroupDecodeConfigConfig = (FastForwardMovingPictureExpertsGroupDecodeConfig) baseFastForwardMovingPictureExpertsGroupConfig;
+			this.fastForwardMovingPictureExpertsGroupDecodeConfigConfig = (FastForwardMovingPictureExpertsGroupDecodeDTO) baseFastForwardMovingPictureExpertsGroupDTO;
 			commandLine = ffmpegDecodeCommandService.createCommand(fastForwardMovingPictureExpertsGroupDecodeConfigConfig);
 			if (StringUtils.isNotBlank(commandLine)) {
 				return start(fastForwardMovingPictureExpertsGroupDecodeConfigConfig.getAppName(), commandLine, true);

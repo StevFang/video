@@ -1,6 +1,5 @@
 package com.qs.dto.config;
 
-import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -9,7 +8,7 @@ import lombok.Data;
  * @author FBin
  */
 @Data
-public class BaseFastForwardMovingPictureExpertsGroupConfig {
+public class BaseFastForwardMovingPictureExpertsGroupDTO {
 
 
 

@@ -1,6 +1,6 @@
 package com.qs.service;
 
-import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveConfig;
+import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveDTO;
 import com.qs.vo.req.DecodeReqVO;
 import com.qs.vo.resp.DecodeRespVO;
 import com.qs.vo.resp.LiveRespVO;
@@ -47,5 +47,5 @@ public interface VideoService {
      * @param fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig
      * @return
      */
-    LiveRespVO livePushStream(FastForwardMovingPictureExpertsGroupLiveConfig fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig);
+    LiveRespVO livePushStream(FastForwardMovingPictureExpertsGroupLiveDTO fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig);
 }
