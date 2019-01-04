@@ -1,5 +1,6 @@
 package com.qs.model.base;
 
+import com.qs.enums.base.ActiveEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,5 +23,7 @@ public class SysUser implements Serializable {
     private Long oid;
 
     private String userName;
+
+    private ActiveEnum isActive;
 
 }
