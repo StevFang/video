@@ -1,6 +1,7 @@
-package com.qs.dao;
+package com.qs.service.manager;
 
 import com.qs.model.TaskModel;
+import com.qs.service.TaskService;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -13,7 +14,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author fbin
  */
 @Component("taskDao")
-public class TaskDaoImpl implements TaskDao {
+public class TaskServiceImpl implements TaskService {
 
     // 存放任务信息
     private ConcurrentMap<String, TaskModel> map = new ConcurrentHashMap<>();

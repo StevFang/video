@@ -2,6 +2,7 @@ package com.qs.service.upload;
 
 import com.qs.service.UploadService;
 import com.qs.utils.ConvertUtil;
+import com.qs.utils.QSFileUtils;
 import com.qs.utils.VideoExceptionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -31,11 +32,7 @@ public class UploadServiceImpl implements UploadService {
     @Value("${server.visit.path}")
     private String visitPath;
 
-    /**
-     * 处理视频上传实现
-     * @param multipartFile
-     * @return
-     */
+    @Override
     public String execUpload(MultipartFile multipartFile) {
 
         VideoExceptionUtils.assertNotNull(multipartFile, "上传文件未获取到！");
@@ -63,12 +60,7 @@ public class UploadServiceImpl implements UploadService {
         return visitPath + newFileName;
     }
 
-    /**
-     * 上传单个分块的文件
-     *
-     * @param multipartFile
-     * @param targetFilePath
-     */
+    @Override
     public String uploadOneBlockFile(MultipartFile multipartFile, String targetFilePath){
 
         VideoExceptionUtils.assertNotNull(multipartFile, "未获取到上传文件");
@@ -93,8 +85,8 @@ public class UploadServiceImpl implements UploadService {
         return visitPath + targetFilePath;
     }
 
-    public String uploadMultiBlockFile(MultipartFile multipartFile, String blockIndex,
-                                     String blockNumber, String randomUUID, String targetFilePath) {
+    @Override
+    public String uploadMultiBlockFile(MultipartFile multipartFile, String blockIndex, String blockNumber, String randomUUID, String targetFilePath) {
         try {
             String fileRealName = targetFilePath;
             String fileIndexPath = targetFilePath + ".index";
@@ -111,7 +103,7 @@ public class UploadServiceImpl implements UploadService {
                 log.error("新建文件异常，异常原因：" + e.getMessage(), e);
                 VideoExceptionUtils.fail("新建文件发生异常！");
             }
-            this.fileConsistent(randomUUID, fileIndexPath, targetFilePath);
+            QSFileUtils.fileConsistent(randomUUID, fileIndexPath, targetFilePath);
             byte[] buf = new byte[1024 * 1024 * 2];
             int len;
             RandomAccessFile fileWrite = new RandomAccessFile(destTempFile, "rw");
@@ -123,9 +115,7 @@ public class UploadServiceImpl implements UploadService {
             fileReader.close();
             fileWrite.close();
 
-            if (this.fileComplete(randomUUID, fileIndexPath,
-                    Integer.valueOf(blockIndex),
-                    Integer.valueOf(blockNumber))) {
+            if (QSFileUtils.fileComplete(randomUUID, fileIndexPath, Integer.valueOf(blockIndex), Integer.valueOf(blockNumber))) {
                 File file = new File(targetFilePath);
                 file.renameTo(new File(fileRealName));
             }
@@ -138,76 +128,5 @@ public class UploadServiceImpl implements UploadService {
     }
 
 
-    /**
-     * 文件持久化
-     * @param randomUUID
-     * @param fileIndexPath
-     * @param filepath
-     * @throws IOException
-     */
-    private void fileConsistent(String randomUUID, String fileIndexPath,
-                               String filepath) throws IOException {
-        File fileIndex = new File(fileIndexPath);
-        if (!fileIndex.exists()) {
-            RandomAccessFile fileIndexWrite = new RandomAccessFile(fileIndex, "rw");
-            fileIndexWrite.seek(0);
-            fileIndexWrite.write(randomUUID.getBytes());
-            fileIndexWrite.close();
-        } else {
-            RandomAccessFile fileIndexWrite = new RandomAccessFile(fileIndex, "rw");
-            fileIndexWrite.seek(0);
-            byte[] bytes = new byte[36];
-            fileIndexWrite.read(bytes);
-            String uuid = new String(bytes);
-            fileIndexWrite.close();
-            if (!uuid.equals(randomUUID)) {
-                fileIndex.delete();
-                File file = new File(filepath);
-                file.delete();
-                RandomAccessFile fileIndexWriter = new RandomAccessFile(
-                        fileIndex, "rw");
-                fileIndexWriter.seek(0);
-                fileIndexWriter.write(randomUUID.getBytes());
-                fileIndexWriter.close();
-            }
-        }
-    }
-
-    /**
-     * 判断文件是否上传完成
-     * @param randomUUID
-     * @param fileIndexPath
-     * @param index
-     * @param blockNumber
-     * @return
-     * @throws IOException
-     */
-    private boolean fileComplete(String randomUUID, String fileIndexPath,
-                                int index, int blockNumber) throws IOException {
-        File fileIndex = new File(fileIndexPath);
-
-        RandomAccessFile fileIndexWrite = new RandomAccessFile(fileIndex, "rw");
-
-        fileIndexWrite.seek(randomUUID.length() + index * 4);
-        String number = String.valueOf(index) + ",";
-        fileIndexWrite.write(number.getBytes());
-        fileIndexWrite.seek(randomUUID.length());
-        byte[] buff = new byte[4];
-        // 用于保存实际读取的字节数
-        int hasRead = 0;
-        // 循环读取
-        String fileContent = "";
-        while ((hasRead = fileIndexWrite.read(buff)) > 0) {
-            fileContent = fileContent + new String(buff, 0, hasRead);
-        }
-        fileIndexWrite.close();
-        String[] list = fileContent.split(",");
-        System.out.println(list.length);
-        if (list.length == blockNumber) {
-            fileIndex.delete();
-            return true;
-        }
-        return false;
-    }
 
 }

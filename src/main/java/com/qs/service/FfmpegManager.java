@@ -33,11 +33,11 @@ public interface FfmpegManager {
 	/**
 	 * 通过组装命令发布任务
 	 * 
-	 * @param baseFastForwardMovingPictureExpertsGroupDTO -组装命令所需配置
+	 * @param baseffmpegDTO -组装命令所需配置
 	 *
 	 * @return
 	 */
-	String start(BaseFastForwardMovingPictureExpertsGroupDTO baseFastForwardMovingPictureExpertsGroupDTO);
+	String start(BaseFastForwardMovingPictureExpertsGroupDTO baseffmpegDTO);
 	
 	/**
 	 * 停止任务

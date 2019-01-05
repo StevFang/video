@@ -2,6 +2,7 @@ package com.qs.dao.base;
 
 import com.qs.dto.common.QueryParamDTO;
 import com.qs.model.base.SysUser;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

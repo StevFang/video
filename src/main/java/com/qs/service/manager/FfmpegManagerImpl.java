@@ -1,6 +1,6 @@
 package com.qs.service.manager;
 
-import com.qs.dao.TaskDao;
+import com.qs.service.TaskService;
 import com.qs.dto.config.BaseFastForwardMovingPictureExpertsGroupDTO;
 import com.qs.dto.config.FastForwardMovingPictureExpertsGroupDecodeDTO;
 import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveDTO;
@@ -33,7 +33,7 @@ public class FfmpegManagerImpl implements FfmpegManager {
 	 * 任务持久化器
 	 */
 	@Autowired
-	private TaskDao taskDao;
+	private TaskService taskService;
 
 	/**
 	 * 任务执行处理器
@@ -68,7 +68,7 @@ public class FfmpegManagerImpl implements FfmpegManager {
 		if (appName != null && command != null) {
 			TaskModel task = taskHandler.process(appName, hasPath ? command : liveDTO.getFfmpegPath() + command);
 			if (task != null) {
-				int ret = taskDao.add(task);
+				int ret = taskService.add(task);
 				if (ret > 0) {
 					return task.getId();
 				} else {
@@ -81,20 +81,20 @@ public class FfmpegManagerImpl implements FfmpegManager {
 	}
 
 	@Override
-	public String start(BaseFastForwardMovingPictureExpertsGroupDTO baseFastForwardMovingPictureExpertsGroupDTO) {
+	public String start(BaseFastForwardMovingPictureExpertsGroupDTO baseffmpegDTO) {
 
 		String commandLine = null;
 
-		if(baseFastForwardMovingPictureExpertsGroupDTO instanceof FastForwardMovingPictureExpertsGroupLiveDTO){
+		if(baseffmpegDTO instanceof FastForwardMovingPictureExpertsGroupLiveDTO){
 			// 直播配置
-			this.liveDTO = (FastForwardMovingPictureExpertsGroupLiveDTO) baseFastForwardMovingPictureExpertsGroupDTO;
+			this.liveDTO = (FastForwardMovingPictureExpertsGroupLiveDTO) baseffmpegDTO;
 			commandLine = ffmpegOnlineCommandService.createCommand(liveDTO);
 			if (StringUtils.isNotBlank(commandLine)) {
 				return start(liveDTO.getAppName(), commandLine, true);
 			}
-		}else if(baseFastForwardMovingPictureExpertsGroupDTO instanceof FastForwardMovingPictureExpertsGroupDecodeDTO){
+		}else if(baseffmpegDTO instanceof FastForwardMovingPictureExpertsGroupDecodeDTO){
 			// 转码配置
-			this.decodeDTO = (FastForwardMovingPictureExpertsGroupDecodeDTO) baseFastForwardMovingPictureExpertsGroupDTO;
+			this.decodeDTO = (FastForwardMovingPictureExpertsGroupDecodeDTO) baseffmpegDTO;
 			commandLine = ffmpegDecodeCommandService.createCommand(decodeDTO);
 			if (StringUtils.isNotBlank(commandLine)) {
 				return start(decodeDTO.getAppName(), commandLine, true);
@@ -106,10 +106,10 @@ public class FfmpegManagerImpl implements FfmpegManager {
 
 	@Override
 	public boolean stop(String id) {
-		if (id != null && taskDao.isHave(id)) {
-			TaskModel task = taskDao.get(id);
+		if (id != null && taskService.isHave(id)) {
+			TaskModel task = taskService.get(id);
 			if (taskHandler.stop(task.getProcess(), task.getThread())) {
-				taskDao.remove(id);
+				taskService.remove(id);
 				return true;
 			}
 		}
@@ -119,14 +119,14 @@ public class FfmpegManagerImpl implements FfmpegManager {
 
 	@Override
 	public int stopAll() {
-		Collection<TaskModel> list = taskDao.getAll();
+		Collection<TaskModel> list = taskService.getAll();
 		Iterator<TaskModel> iter = list.iterator();
 		TaskModel tasker = null;
 		int index = 0;
 		while (iter.hasNext()) {
 			tasker = iter.next();
 			if (taskHandler.stop(tasker.getProcess(), tasker.getThread())) {
-				taskDao.remove(tasker.getId());
+				taskService.remove(tasker.getId());
 				index++;
 			}
 		}
@@ -135,11 +135,11 @@ public class FfmpegManagerImpl implements FfmpegManager {
 
 	@Override
 	public TaskModel query(String id) {
-		return taskDao.get(id);
+		return taskService.get(id);
 	}
 
 	@Override
 	public Collection<TaskModel> queryAll() {
-		return taskDao.getAll();
+		return taskService.getAll();
 	}
 }

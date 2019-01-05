@@ -2,7 +2,11 @@ package com.qs.dto.config;
 
 import com.qs.vo.req.DecodeReqVO;
 import com.qs.utils.ConvertUtil;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * FFmpeg视频转码配置
@@ -10,6 +14,9 @@ import lombok.Data;
  * @author FBin
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class FastForwardMovingPictureExpertsGroupDecodeDTO extends BaseFastForwardMovingPictureExpertsGroupDTO {
 
     /**
@@ -77,10 +84,6 @@ public class FastForwardMovingPictureExpertsGroupDecodeDTO extends BaseFastForwa
      */
     private String rs;
 
-    private FastForwardMovingPictureExpertsGroupDecodeDTO(){
-
-    }
-
     /**
      * 获取实例
      * @param decodeReqVO
@@ -88,21 +91,30 @@ public class FastForwardMovingPictureExpertsGroupDecodeDTO extends BaseFastForwa
      * @param memcoderPath
      * @return
      */
-    public static FastForwardMovingPictureExpertsGroupDecodeDTO getInstanceOf(DecodeReqVO decodeReqVO, String ffmpegPath, String memcoderPath, String savePath) {
-        FastForwardMovingPictureExpertsGroupDecodeDTO config = new FastForwardMovingPictureExpertsGroupDecodeDTO();
-        config.setFfmpegPath(ffmpegPath);
-        config.setMemcoderPath(memcoderPath);
-        config.setVideoId(decodeReqVO.getVideoId());
-        config.setAppName(decodeReqVO.getAppName());
-        config.setSourcePath(decodeReqVO.getSourcePath());
-        config.setTargetPath(savePath);
-        config.setTargetName(ConvertUtil.getFormatUUID());
-        config.setFmt(decodeReqVO.getFmt());
-        config.setBitrate(decodeReqVO.getBitrate());
-        config.setFreq(decodeReqVO.getFreq());
-        config.setQscale(decodeReqVO.getQscale());
-        config.setFps(decodeReqVO.getFps());
-        config.setRs(decodeReqVO.getRs());
-        return config;
+    public static FastForwardMovingPictureExpertsGroupDecodeDTO getInstanceOf(DecodeReqVO decodeReqVO,
+                                                                              String ffmpegPath,
+                                                                              String memcoderPath,
+                                                                              String savePath) {
+        if(decodeReqVO == null
+                || StringUtils.isBlank(ffmpegPath)
+                || StringUtils.isBlank(memcoderPath)
+                || StringUtils.isBlank(savePath)){
+            return null;
+        }
+        return FastForwardMovingPictureExpertsGroupDecodeDTO.builder()
+                .ffmpegPath(ffmpegPath)
+                .memcoderPath(memcoderPath)
+                .videoId(decodeReqVO.getVideoId())
+                .appName(decodeReqVO.getAppName())
+                .sourcePath(decodeReqVO.getSourcePath())
+                .targetPath(savePath)
+                .targetName(ConvertUtil.getFormatUUID())
+                .fmt(decodeReqVO.getFmt())
+                .bitrate(decodeReqVO.getBitrate())
+                .freq(decodeReqVO.getFreq())
+                .qscale(decodeReqVO.getQscale())
+                .fps(decodeReqVO.getFps())
+                .rs(decodeReqVO.getRs())
+                .build();
     }
 }

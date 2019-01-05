@@ -1,4 +1,4 @@
-package com.qs.dao;
+package com.qs.service;
 
 import com.qs.model.TaskModel;
 
@@ -9,7 +9,7 @@ import java.util.Collection;
  * 任务信息持久层接口
  * @author fbin
  */
-public interface TaskDao {
+public interface TaskService {
 	/**
 	 * 通过id查询任务信息
 	 * @param id - 任务ID
