@@ -11,7 +11,7 @@ import com.qs.vo.req.LiveReqVO;
 import com.qs.vo.req.VideoReqVO;
 import com.qs.vo.resp.DecodeRespVO;
 import com.qs.vo.resp.LiveRespVO;
-import com.qs.vo.resp.VideoRespVO;
+import com.qs.vo.resp.CommonRespVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,18 +47,24 @@ public class VideoController {
      */
     @ResponseBody
     @RequestMapping(value = "/all", method = { RequestMethod.GET })
-    public VideoRespVO findAll(@RequestParam(value = "query", required = false) VideoReqVO videoReqVO){
+    public CommonRespVO findAll(@RequestParam(value = "query", required = false) VideoReqVO videoReqVO){
         try{
             int total = videoService.findCount(videoReqVO);
-            List<VideoRespVO> dataList = Lists.newArrayList();
+            List<CommonRespVO> dataList = Lists.newArrayList();
             if(total > 0){
                 dataList = videoService.findList(videoReqVO);
             }
-            DataTableDTO dataTableDTO = DataTableDTO.getInstance(videoReqVO, total, dataList);
-            VideoRespVO videoRespVO = CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.QUERY_SUCCESS);
-            videoRespVO.setData(dataTableDTO);
+            DataTableDTO dataTableDTO = DataTableDTO.builder()
+                    .total(total)
+                    .current(videoReqVO.getCurrent())
+                    .pageSize(videoReqVO.getPageSize())
+                    .pages(CommonUtils.calPages(total, videoReqVO.getPageSize()))
+                    .dataList(dataList)
+                    .build();
+            CommonRespVO commonRespVO = CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.QUERY_SUCCESS);
+            commonRespVO.setData(dataTableDTO);
 
-            return videoRespVO;
+            return commonRespVO;
         }catch (Exception e){
             log.error("获取视频列表数据异常", e);
             return CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.QUERY_ERROR);
@@ -72,23 +78,29 @@ public class VideoController {
      */
     @ResponseBody
     @RequestMapping(value = "/live")
-    public VideoRespVO live(LiveReqVO liveReqVO){
+    public CommonRespVO live(LiveReqVO liveReqVO){
         try{
-            FastForwardMovingPictureExpertsGroupLiveDTO fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig = FastForwardMovingPictureExpertsGroupLiveDTO.getInstanceOf(liveReqVO, ffmpegPath);
-            // ffmpeg环境是否配置正确
-            if (fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig == null) {
-                return CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.CONFIG_ERROR);
-            }
+            CommonRespVO commonRespVO;
             // 参数是否符合要求
-            if (StringUtils.isBlank(fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.getAppName())) {
-                return CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.PARAM_CHECK_ERROR);
+            if (StringUtils.isBlank(liveReqVO.getAppName())) {
+                commonRespVO = CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.PARAM_CHECK_ERROR);
+                commonRespVO.setMsg(String.format(commonRespVO.getMsg(), "appName", liveReqVO.getAppName()));
+                return commonRespVO;
             }
-            LiveRespVO liveStream = videoService.livePushStream(fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig);
 
-            VideoRespVO videoRespVO = CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.LIVE_SUCCESS);
-            videoRespVO.setData(liveStream);
+            FastForwardMovingPictureExpertsGroupLiveDTO config =
+                    FastForwardMovingPictureExpertsGroupLiveDTO.getInstanceOf(liveReqVO, ffmpegPath);
+            // ffmpeg环境是否配置正确
+            if (config == null) {
+                commonRespVO = CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.CONFIG_ERROR);
+                return commonRespVO;
+            }
 
-            return videoRespVO;
+            LiveRespVO liveStream = videoService.livePushStream(config);
+            commonRespVO = CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.LIVE_SUCCESS);
+            commonRespVO.setData(liveStream);
+
+            return commonRespVO;
         }catch (Exception e){
             log.error("视频推流异常", e);
             return CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.LIVE_ERROR);
@@ -102,14 +114,14 @@ public class VideoController {
      */
     @ResponseBody
     @RequestMapping(value = "/decode", method = { RequestMethod.POST })
-    public VideoRespVO videoDecode(DecodeReqVO decodeReqVO){
+    public CommonRespVO videoDecode(DecodeReqVO decodeReqVO){
         try{
             DecodeRespVO decodeRespVO = videoService.decodeVideo(decodeReqVO);
 
-            VideoRespVO videoRespVO = CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.VIDEO_DECODE_SUCCESS);
-            videoRespVO.setData(decodeRespVO);
+            CommonRespVO commonRespVO = CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.VIDEO_DECODE_SUCCESS);
+            commonRespVO.setData(decodeRespVO);
 
-            return videoRespVO;
+            return commonRespVO;
         }catch (Exception e){
             log.error("视频解码转码异常", e);
 

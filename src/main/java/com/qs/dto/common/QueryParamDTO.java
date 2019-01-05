@@ -2,6 +2,8 @@ package com.qs.dto.common;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 查询参数信息
  *
@@ -10,18 +12,18 @@ import lombok.Data;
  * @author FBin
  */
 @Data
-public class QueryParamDTO {
+public class QueryParamDTO implements Serializable {
 
-    protected Integer current;
+    private Integer current;
 
-    protected Integer pageSize;
+    private Integer pageSize;
 
-    protected String[] queryFields;
+    private String[] queryFields;
 
-    protected String[] queryValues;
+    private String[] queryValues;
 
-    protected String[] sortFields;
+    private String[] sortFields;
 
-    protected String[] sortValues;
+    private String[] sortValues;
 
 }

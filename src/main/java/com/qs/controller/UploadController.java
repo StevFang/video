@@ -5,7 +5,7 @@ import com.qs.service.upload.UploadServiceImpl;
 import com.qs.utils.CommonUtils;
 import com.qs.utils.ConvertUtil;
 import com.qs.utils.VideoExceptionUtils;
-import com.qs.vo.resp.VideoRespVO;
+import com.qs.vo.resp.CommonRespVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -38,19 +38,19 @@ public class UploadController {
      */
     @ResponseBody
     @RequestMapping(value = "/simple", method = {RequestMethod.POST})
-    public VideoRespVO uploadVideo(HttpServletRequest request) {
-        VideoRespVO videoRespVO = CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.UPLOAD_SUCCESS);
+    public CommonRespVO uploadVideo(HttpServletRequest request) {
+        CommonRespVO commonRespVO = CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.UPLOAD_SUCCESS);
         try {
             MultipartHttpServletRequest multipartRequest= (MultipartHttpServletRequest) request;
             MultipartFile multipartFile = multipartRequest.getFile("file");
             // 处理视频上传
             String url = uploadService.execUpload(multipartFile);
-            videoRespVO.setData(url);
+            commonRespVO.setData(url);
         } catch (Exception e) {
             log.error("上传视频接收报错,错误原因：" + e.getMessage(), e);
             VideoExceptionUtils.fail("上传失败！");
         }
-        return videoRespVO;
+        return commonRespVO;
     }
 
     /**
@@ -65,11 +65,11 @@ public class UploadController {
      */
     @ResponseBody
     @RequestMapping(value = "/big", method = {RequestMethod.POST})
-    public VideoRespVO bigFileUpload(@RequestParam(value = "blockIndex", required = false) String blockIndex,
-                                     @RequestParam(value = "blockNumber", required = false) String blockNumber,
-                                     @RequestParam(value = "targetFilePath", required = false) String targetFilePath,
-                                     @RequestParam(value = "randomUUID", required = false) String randomUUID,
-                                     @RequestParam(value = "file", required = false) MultipartFile multipartFile) {
+    public CommonRespVO bigFileUpload(@RequestParam(value = "blockIndex", required = false) String blockIndex,
+                                      @RequestParam(value = "blockNumber", required = false) String blockNumber,
+                                      @RequestParam(value = "targetFilePath", required = false) String targetFilePath,
+                                      @RequestParam(value = "randomUUID", required = false) String randomUUID,
+                                      @RequestParam(value = "file", required = false) MultipartFile multipartFile) {
         VideoExceptionUtils.assertNotBlank(blockNumber, "参数blockNumber不能为空！");
 
         // 文件不走分块上传

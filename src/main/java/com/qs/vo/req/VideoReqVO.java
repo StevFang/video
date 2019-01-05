@@ -1,10 +1,7 @@
 package com.qs.vo.req;
 
 import com.qs.dto.common.QueryParamDTO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 上传视频信息交互 View Object

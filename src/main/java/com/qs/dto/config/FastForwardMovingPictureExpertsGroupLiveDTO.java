@@ -1,7 +1,11 @@
 package com.qs.dto.config;
 
 import com.qs.vo.req.LiveReqVO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * FFmpeg推流配置
@@ -9,6 +13,9 @@ import lombok.Data;
  * @author FBin
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class FastForwardMovingPictureExpertsGroupLiveDTO extends BaseFastForwardMovingPictureExpertsGroupDTO {
 
     /**
@@ -56,10 +63,6 @@ public class FastForwardMovingPictureExpertsGroupLiveDTO extends BaseFastForward
      */
     private String rs;
 
-    private FastForwardMovingPictureExpertsGroupLiveDTO(){
-
-    }
-
     /**
      * 获取实例
      * @param liveReqVO
@@ -67,16 +70,19 @@ public class FastForwardMovingPictureExpertsGroupLiveDTO extends BaseFastForward
      * @return
      */
     public static FastForwardMovingPictureExpertsGroupLiveDTO getInstanceOf(LiveReqVO liveReqVO, String ffmpegPath) {
-        FastForwardMovingPictureExpertsGroupLiveDTO fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig = new FastForwardMovingPictureExpertsGroupLiveDTO();
-        fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.setFfmpegPath(ffmpegPath);
-        fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.setInput(liveReqVO.getInput());
-        fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.setOutput(liveReqVO.getOutput());
-        fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.setAppName(liveReqVO.getAppName());
-        fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.setTwoPart(liveReqVO.getTwoPart());
-        fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.setCodec(liveReqVO.getCodec());
-        fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.setFmt(liveReqVO.getFmt());
-        fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.setFps(liveReqVO.getFps());
-        fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.setRs(liveReqVO.getRs());
-        return fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig;
+        if(liveReqVO == null || StringUtils.isBlank(ffmpegPath)){
+            return null;
+        }
+        return FastForwardMovingPictureExpertsGroupLiveDTO.builder()
+                .ffmpegPath(ffmpegPath)
+                .input(liveReqVO.getInput())
+                .output(liveReqVO.getOutput())
+                .appName(liveReqVO.getAppName())
+                .twoPart(liveReqVO.getTwoPart())
+                .codec(liveReqVO.getCodec())
+                .fmt(liveReqVO.getFmt())
+                .fps(liveReqVO.getFps())
+                .rs(liveReqVO.getRs())
+                .build();
     }
 }

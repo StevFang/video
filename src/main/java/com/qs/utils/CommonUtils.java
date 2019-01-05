@@ -1,7 +1,7 @@
 package com.qs.utils;
 
 import com.qs.enums.VideoCodeEnum;
-import com.qs.vo.resp.VideoRespVO;
+import com.qs.vo.resp.CommonRespVO;
 
 /**
  * 通用工具类
@@ -11,8 +11,8 @@ import com.qs.vo.resp.VideoRespVO;
  */
 public class CommonUtils {
 
-    public static final VideoRespVO getVideoRespVOByCodeEnum(VideoCodeEnum videoCodeEnum){
-        return VideoRespVO.builder().code(videoCodeEnum.getCode()).msg(videoCodeEnum.getLabel()).build();
+    public static final CommonRespVO getVideoRespVOByCodeEnum(VideoCodeEnum videoCodeEnum){
+        return CommonRespVO.builder().code(videoCodeEnum.getCode()).msg(videoCodeEnum.getLabel()).build();
     }
 
     /**
