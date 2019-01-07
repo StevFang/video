@@ -8,7 +8,7 @@ import lombok.Data;
  * @author FBin
  */
 @Data
-public class BaseFastForwardMovingPictureExpertsGroupDTO {
+public class BaseffmpegDTO {
 
 
 

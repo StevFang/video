@@ -1,4 +1,4 @@
-package com.qs.model.base.context;
+package com.qs.model.context;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

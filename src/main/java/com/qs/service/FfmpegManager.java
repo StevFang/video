@@ -1,7 +1,7 @@
 package com.qs.service;
 
-import com.qs.dto.config.BaseFastForwardMovingPictureExpertsGroupDTO;
-import com.qs.model.TaskModel;
+import com.qs.dto.config.BaseffmpegDTO;
+import com.qs.dto.video.TaskDTO;
 
 import java.util.Collection;
 
@@ -37,7 +37,7 @@ public interface FfmpegManager {
 	 *
 	 * @return
 	 */
-	String start(BaseFastForwardMovingPictureExpertsGroupDTO baseffmpegDTO);
+	String start(BaseffmpegDTO baseffmpegDTO);
 	
 	/**
 	 * 停止任务
@@ -59,11 +59,11 @@ public interface FfmpegManager {
 	 * 
 	 * @param id
 	 */
-	TaskModel query(String id);
+	TaskDTO query(String id);
 
 	/**
 	 * 查询全部任务信息
 	 * 
 	 */
-	Collection<TaskModel> queryAll();
+	Collection<TaskDTO> queryAll();
 }

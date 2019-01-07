@@ -44,11 +44,14 @@ public class UploadServiceImpl implements UploadService {
         // 给上传上来的文件一个新的名字
         String oldFileName = multipartFile.getOriginalFilename();
         String newFileName = ConvertUtil.getBase64Time() + oldFileName.substring(oldFileName.lastIndexOf("."));
-        File uploadFile = new File(savePath + newFileName);
+        String savePathAndName = savePath + newFileName;
+        File uploadFile = new File(savePathAndName);
         try{
             uploadFile.createNewFile();
             DigestUtils.md5Hex(multipartFile.getInputStream());
             FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), uploadFile);
+
+
         }catch (Exception e){
             log.error("创建目标文件异常", e);
             VideoExceptionUtils.fail("上传文件保存异常！");

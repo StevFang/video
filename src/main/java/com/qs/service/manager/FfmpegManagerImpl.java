@@ -1,10 +1,10 @@
 package com.qs.service.manager;
 
 import com.qs.service.TaskService;
-import com.qs.dto.config.BaseFastForwardMovingPictureExpertsGroupDTO;
-import com.qs.dto.config.FastForwardMovingPictureExpertsGroupDecodeDTO;
-import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveDTO;
-import com.qs.model.TaskModel;
+import com.qs.dto.config.BaseffmpegDTO;
+import com.qs.dto.config.DecodeffmpegDTO;
+import com.qs.dto.config.LiveffmpegDTO;
+import com.qs.dto.video.TaskDTO;
 import com.qs.service.FfmpegManager;
 import com.qs.service.command.ffmpeg.FfmpegDecodeCommandServiceImpl;
 import com.qs.service.command.ffmpeg.FfmpegOnlineCommandServiceImpl;
@@ -53,9 +53,9 @@ public class FfmpegManagerImpl implements FfmpegManager {
 	@Resource
 	private FfmpegDecodeCommandServiceImpl ffmpegDecodeCommandService;
 
-	private FastForwardMovingPictureExpertsGroupLiveDTO liveDTO = null;
+	private LiveffmpegDTO liveDTO = null;
 
-	private FastForwardMovingPictureExpertsGroupDecodeDTO decodeDTO = null;
+	private DecodeffmpegDTO decodeDTO = null;
 
 	@Override
 	public String start(String appName, String command) {
@@ -66,7 +66,7 @@ public class FfmpegManagerImpl implements FfmpegManager {
 	public String start(String appName, String command, boolean hasPath) {
 		log.info("command= "+ command);
 		if (appName != null && command != null) {
-			TaskModel task = taskHandler.process(appName, hasPath ? command : liveDTO.getFfmpegPath() + command);
+			TaskDTO task = taskHandler.process(appName, hasPath ? command : liveDTO.getFfmpegPath() + command);
 			if (task != null) {
 				int ret = taskService.add(task);
 				if (ret > 0) {
@@ -81,20 +81,20 @@ public class FfmpegManagerImpl implements FfmpegManager {
 	}
 
 	@Override
-	public String start(BaseFastForwardMovingPictureExpertsGroupDTO baseffmpegDTO) {
+	public String start(BaseffmpegDTO baseffmpegDTO) {
 
 		String commandLine = null;
 
-		if(baseffmpegDTO instanceof FastForwardMovingPictureExpertsGroupLiveDTO){
+		if(baseffmpegDTO instanceof LiveffmpegDTO){
 			// 直播配置
-			this.liveDTO = (FastForwardMovingPictureExpertsGroupLiveDTO) baseffmpegDTO;
+			this.liveDTO = (LiveffmpegDTO) baseffmpegDTO;
 			commandLine = ffmpegOnlineCommandService.createCommand(liveDTO);
 			if (StringUtils.isNotBlank(commandLine)) {
 				return start(liveDTO.getAppName(), commandLine, true);
 			}
-		}else if(baseffmpegDTO instanceof FastForwardMovingPictureExpertsGroupDecodeDTO){
+		}else if(baseffmpegDTO instanceof DecodeffmpegDTO){
 			// 转码配置
-			this.decodeDTO = (FastForwardMovingPictureExpertsGroupDecodeDTO) baseffmpegDTO;
+			this.decodeDTO = (DecodeffmpegDTO) baseffmpegDTO;
 			commandLine = ffmpegDecodeCommandService.createCommand(decodeDTO);
 			if (StringUtils.isNotBlank(commandLine)) {
 				return start(decodeDTO.getAppName(), commandLine, true);
@@ -107,7 +107,7 @@ public class FfmpegManagerImpl implements FfmpegManager {
 	@Override
 	public boolean stop(String id) {
 		if (id != null && taskService.isHave(id)) {
-			TaskModel task = taskService.get(id);
+			TaskDTO task = taskService.get(id);
 			if (taskHandler.stop(task.getProcess(), task.getThread())) {
 				taskService.remove(id);
 				return true;
@@ -119,9 +119,9 @@ public class FfmpegManagerImpl implements FfmpegManager {
 
 	@Override
 	public int stopAll() {
-		Collection<TaskModel> list = taskService.getAll();
-		Iterator<TaskModel> iter = list.iterator();
-		TaskModel tasker = null;
+		Collection<TaskDTO> list = taskService.getAll();
+		Iterator<TaskDTO> iter = list.iterator();
+		TaskDTO tasker = null;
 		int index = 0;
 		while (iter.hasNext()) {
 			tasker = iter.next();
@@ -134,12 +134,12 @@ public class FfmpegManagerImpl implements FfmpegManager {
 	}
 
 	@Override
-	public TaskModel query(String id) {
+	public TaskDTO query(String id) {
 		return taskService.get(id);
 	}
 
 	@Override
-	public Collection<TaskModel> queryAll() {
+	public Collection<TaskDTO> queryAll() {
 		return taskService.getAll();
 	}
 }

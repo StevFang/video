@@ -1,6 +1,6 @@
 package com.qs.utils;
 
-import com.qs.model.base.SysUser;
+import com.qs.model.base.user.User;
 
 import javax.servlet.http.HttpSession;
 
@@ -23,8 +23,8 @@ public class SessionUtils {
     public boolean checkOnline(String ssoSessionId){
         HttpSession httpSession = (HttpSession) RedisUtils.get(ssoSessionId);
         if(httpSession != null){
-            SysUser sysUser = (SysUser) httpSession.getAttribute(SessionUtils.VIDEO_USER);
-            if(sysUser != null){
+            User user = (User) httpSession.getAttribute(SessionUtils.VIDEO_USER);
+            if(user != null){
                 return true;
             }
         }
@@ -37,10 +37,10 @@ public class SessionUtils {
      * @param ssoSessionId
      * @return
      */
-    public SysUser getCurrentUser(String ssoSessionId){
+    public User getCurrentUser(String ssoSessionId){
         HttpSession httpSession = (HttpSession) RedisUtils.get(ssoSessionId);
         if(httpSession != null){
-            return (SysUser) httpSession.getAttribute(SessionUtils.VIDEO_USER);
+            return (User) httpSession.getAttribute(SessionUtils.VIDEO_USER);
         }
         return null;
     }

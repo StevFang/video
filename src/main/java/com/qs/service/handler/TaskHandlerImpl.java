@@ -1,6 +1,6 @@
 package com.qs.service.handler;
 
-import com.qs.model.TaskModel;
+import com.qs.dto.video.TaskDTO;
 import com.qs.service.TaskHandler;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +24,10 @@ public class TaskHandlerImpl implements TaskHandler {
     private DefaultOutHandlerMethod defaultOutHandlerMethod;
 
     @Override
-    public TaskModel process(String appName, String command) {
+    public TaskDTO process(String appName, String command) {
         Process process = null;
         TaskMessageOutHandler taskMessageOutHandler = null;
-        TaskModel taskModel = null;
+        TaskDTO taskDTO = null;
         try {
             if (runtime == null) {
                 runtime = Runtime.getRuntime();
@@ -36,12 +36,12 @@ public class TaskHandlerImpl implements TaskHandler {
             process = runtime.exec(command);
             taskMessageOutHandler = new TaskMessageOutHandler(process.getErrorStream(), appName, defaultOutHandlerMethod);
             taskMessageOutHandler.start();
-            taskModel = new TaskModel(appName, process, taskMessageOutHandler);
+            taskDTO = new TaskDTO(appName, process, taskMessageOutHandler);
         } catch (IOException e) {
             stop(taskMessageOutHandler);
             stop(process);
         }
-        return taskModel;
+        return taskDTO;
     }
 
     @Override

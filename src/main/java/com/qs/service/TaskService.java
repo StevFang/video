@@ -1,6 +1,6 @@
 package com.qs.service;
 
-import com.qs.model.TaskModel;
+import com.qs.dto.video.TaskDTO;
 
 import java.util.Collection;
 
@@ -15,20 +15,20 @@ public interface TaskService {
 	 * @param id - 任务ID
 	 * @return TaskModel -任务实体
 	 */
-	TaskModel get(String id);
+	TaskDTO get(String id);
 
 	/**
 	 * 查询全部任务信息
 	 * @return Collection<TaskModel>
 	 */
-	Collection<TaskModel> getAll();
+	Collection<TaskDTO> getAll();
 
 	/**
 	 * 增加任务信息
-	 * @param taskModel -任务信息实体
+	 * @param taskDTO -任务信息实体
 	 * @return 增加数量：<1-增加失败，>=1-增加成功
 	 */
-	int add(TaskModel taskModel);
+	int add(TaskDTO taskDTO);
 
 	/**
 	 * 删除id对应的任务信息

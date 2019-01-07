@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.annotation.Resource;
-
 /**
  * @author FBin
  * @time 2019/1/4 17:50
@@ -18,7 +16,7 @@ import javax.annotation.Resource;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes={Application.class})
 @Slf4j
-public class SysUserDaoTest {
+public class UserDaoTest {
 
     @Autowired
     private SysUserDao sysUserDao;

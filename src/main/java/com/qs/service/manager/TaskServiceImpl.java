@@ -1,6 +1,6 @@
 package com.qs.service.manager;
 
-import com.qs.model.TaskModel;
+import com.qs.dto.video.TaskDTO;
 import com.qs.service.TaskService;
 import org.springframework.stereotype.Component;
 
@@ -17,23 +17,23 @@ import java.util.concurrent.ConcurrentMap;
 public class TaskServiceImpl implements TaskService {
 
     // 存放任务信息
-    private ConcurrentMap<String, TaskModel> map = new ConcurrentHashMap<>();
+    private ConcurrentMap<String, TaskDTO> map = new ConcurrentHashMap<>();
 
     @Override
-    public TaskModel get(String id) {
+    public TaskDTO get(String id) {
         return map.get(id);
     }
 
     @Override
-    public Collection<TaskModel> getAll() {
+    public Collection<TaskDTO> getAll() {
         return map.values();
     }
 
     @Override
-    public int add(TaskModel taskModel) {
-        String id = taskModel.getId();
+    public int add(TaskDTO taskDTO) {
+        String id = taskDTO.getId();
         if (id != null && !map.containsKey(id)) {
-            map.put(taskModel.getId(), taskModel);
+            map.put(taskDTO.getId(), taskDTO);
             if (map.get(id) != null) {
                 return 1;
             }

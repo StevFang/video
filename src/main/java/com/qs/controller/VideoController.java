@@ -2,7 +2,7 @@ package com.qs.controller;
 
 import com.google.common.collect.Lists;
 import com.qs.dto.common.DataTableDTO;
-import com.qs.dto.config.FastForwardMovingPictureExpertsGroupLiveDTO;
+import com.qs.dto.config.LiveffmpegDTO;
 import com.qs.enums.VideoCodeEnum;
 import com.qs.service.VideoService;
 import com.qs.utils.CommonUtils;
@@ -88,8 +88,8 @@ public class VideoController {
                 return commonRespVO;
             }
 
-            FastForwardMovingPictureExpertsGroupLiveDTO config =
-                    FastForwardMovingPictureExpertsGroupLiveDTO.getInstanceOf(liveReqVO, ffmpegPath);
+            LiveffmpegDTO config =
+                    LiveffmpegDTO.getInstanceOf(liveReqVO, ffmpegPath);
             // ffmpeg环境是否配置正确
             if (config == null) {
                 commonRespVO = CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.CONFIG_ERROR);

@@ -1,6 +1,6 @@
 package com.qs.service;
 
-import com.qs.model.TaskModel;
+import com.qs.dto.video.TaskDTO;
 
 /**
  * 任务执行接口
@@ -14,7 +14,7 @@ public interface TaskHandler {
 	 * @param command
 	 * @return
 	 */
-	TaskModel process(String appName, String command);
+	TaskDTO process(String appName, String command);
 
 	/**
 	 * 停止主进程（停止主进程需要保证输出线程已经关闭，否则输出线程会出错）

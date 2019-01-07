@@ -1,4 +1,4 @@
-package com.qs.model;
+package com.qs.vo.resp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,12 +14,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class VideoModel {
+public class VideoRespVO {
 
     /**
      * 视频Id
      */
-    private String videoId;
+    private Long videoId;
 
     /**
      * 视频访问路径

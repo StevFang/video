@@ -17,7 +17,7 @@ import org.apache.commons.lang.StringUtils;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FastForwardMovingPictureExpertsGroupDecodeDTO extends BaseFastForwardMovingPictureExpertsGroupDTO {
+public class DecodeffmpegDTO extends BaseffmpegDTO {
 
     /**
      * ffmpeg 路径
@@ -91,17 +91,17 @@ public class FastForwardMovingPictureExpertsGroupDecodeDTO extends BaseFastForwa
      * @param memcoderPath
      * @return
      */
-    public static FastForwardMovingPictureExpertsGroupDecodeDTO getInstanceOf(DecodeReqVO decodeReqVO,
-                                                                              String ffmpegPath,
-                                                                              String memcoderPath,
-                                                                              String savePath) {
+    public static DecodeffmpegDTO getInstanceOf(DecodeReqVO decodeReqVO,
+                                                String ffmpegPath,
+                                                String memcoderPath,
+                                                String savePath) {
         if(decodeReqVO == null
                 || StringUtils.isBlank(ffmpegPath)
                 || StringUtils.isBlank(memcoderPath)
                 || StringUtils.isBlank(savePath)){
             return null;
         }
-        return FastForwardMovingPictureExpertsGroupDecodeDTO.builder()
+        return DecodeffmpegDTO.builder()
                 .ffmpegPath(ffmpegPath)
                 .memcoderPath(memcoderPath)
                 .videoId(decodeReqVO.getVideoId())

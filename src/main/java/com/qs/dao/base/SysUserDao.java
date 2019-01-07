@@ -1,8 +1,7 @@
 package com.qs.dao.base;
 
 import com.qs.dto.common.QueryParamDTO;
-import com.qs.model.base.SysUser;
-import org.apache.ibatis.annotations.Mapper;
+import com.qs.model.base.user.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,7 +21,7 @@ public interface SysUserDao {
      * @param oid
      * @return
      */
-    SysUser findOne(Long oid);
+    User findOne(Long oid);
 
     /**
      * 根据UserName查询 |
@@ -30,14 +29,14 @@ public interface SysUserDao {
      * @param userName
      * @return
      */
-    List<SysUser> findByUserName(String userName);
+    List<User> findByUserName(String userName);
 
     /**
      * 查询全部 |
      *
      * @return
      */
-    List<SysUser> findAll();
+    List<User> findAll();
 
     /**
      * 根据参数查询 |
@@ -45,6 +44,6 @@ public interface SysUserDao {
      * @param queryParam
      * @return
      */
-    List<SysUser> findAllByParams(QueryParamDTO queryParam);
+    List<User> findAllByParams(QueryParamDTO queryParam);
 
 }

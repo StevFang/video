@@ -16,7 +16,7 @@ import org.apache.commons.lang.StringUtils;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FastForwardMovingPictureExpertsGroupLiveDTO extends BaseFastForwardMovingPictureExpertsGroupDTO {
+public class LiveffmpegDTO extends BaseffmpegDTO {
 
     /**
      * ffmpeg 路径
@@ -69,11 +69,11 @@ public class FastForwardMovingPictureExpertsGroupLiveDTO extends BaseFastForward
      * @param ffmpegPath
      * @return
      */
-    public static FastForwardMovingPictureExpertsGroupLiveDTO getInstanceOf(LiveReqVO liveReqVO, String ffmpegPath) {
+    public static LiveffmpegDTO getInstanceOf(LiveReqVO liveReqVO, String ffmpegPath) {
         if(liveReqVO == null || StringUtils.isBlank(ffmpegPath)){
             return null;
         }
-        return FastForwardMovingPictureExpertsGroupLiveDTO.builder()
+        return LiveffmpegDTO.builder()
                 .ffmpegPath(ffmpegPath)
                 .input(liveReqVO.getInput())
                 .output(liveReqVO.getOutput())

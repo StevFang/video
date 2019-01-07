@@ -1,7 +1,7 @@
 package com.qs.utils;
 
 import com.google.common.collect.Lists;
-import com.qs.model.base.context.VideoContext;
+import com.qs.model.context.VideoContext;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.List;
