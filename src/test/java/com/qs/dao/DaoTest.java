@@ -1,7 +1,8 @@
 package com.qs.dao;
 
 import com.qs.Application;
-import com.qs.dao.base.SysUserDao;
+import com.qs.dao.base.UserDao;
+import com.qs.model.upload.UploadRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,14 +17,22 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes={Application.class})
 @Slf4j
-public class UserDaoTest {
+public class DaoTest {
 
     @Autowired
-    private SysUserDao sysUserDao;
+    private UserDao userDao;
+
+    @Autowired
+    private com.qs.service.common.ModelServiceImpl ModelServiceImpl;
 
     @Test
     public void findOne(){
-        System.out.println(sysUserDao.findAll());
+        System.out.println(userDao.findAll());
+    }
+
+    @Test
+    public void analyzeDataSource() throws Exception {
+        // ModelServiceImpl.analyzeModelMeta(UploadRecord.class);
     }
 
 }

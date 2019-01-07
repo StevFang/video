@@ -13,7 +13,7 @@ import java.util.List;
  * @time 2019/1/4 17:07
  */
 @Repository
-public interface SysUserDao {
+public interface UserDao {
 
     /**
      * 根据Oid查询 |

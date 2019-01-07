@@ -1,5 +1,6 @@
 package com.qs.dao.base;
 
+import com.qs.model.upload.UploadRecord;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -7,8 +8,8 @@ import org.springframework.stereotype.Repository;
  * @time 2019/1/7 17:32
  */
 @Repository
-public interface UploadDao {
+public interface UploadRecordDao {
 
-    Integer save();
+    Integer save(UploadRecord uploadRecord);
 
 }

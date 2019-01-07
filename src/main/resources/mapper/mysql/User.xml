@@ -2,21 +2,21 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qs.dao.base.SysUserDao">
+<mapper namespace="com.qs.dao.base.UserDao">
 
-    <select id="findOne" parameterType="java.lang.Long" resultType="SysUser">
+    <select id="findOne" parameterType="java.lang.Long" resultType="User">
         SELECT oid, userName
         FROM User
         WHERE oid = #{oid}
     </select>
 
-    <select id="findByUserName" parameterType="java.lang.String" resultType="SysUser">
+    <select id="findByUserName" parameterType="java.lang.String" resultType="User">
         SELECT oid, userName
         FROM User
         WHERE userName like '%'+#{userName}+'%'
     </select>
 
-    <select id="findAll" resultType="SysUser">
+    <select id="findAll" resultType="User">
         SELECT oid, userName FROM User
     </select>
 
