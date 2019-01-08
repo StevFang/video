@@ -71,9 +71,9 @@ public class ConvertUtil {
      */
     public static List<Field> getClassFields(Class<?> clazz){
         List<Field> fieldList = Lists.newArrayList();
-        Type genericSuperClass = clazz.getGenericSuperclass();
-        if(genericSuperClass != null && !genericSuperClass.equals(Object.class)){
-            getSuperFields(genericSuperClass.getClass(), fieldList);
+        Type superClass = clazz.getSuperclass();
+        if(superClass != null && !superClass.equals(Object.class)){
+            getSuperFields(superClass, fieldList);
         }
         Field[] declaredFields = clazz.getDeclaredFields();
         for(Field field : declaredFields){
@@ -85,15 +85,15 @@ public class ConvertUtil {
     /**
      * 获取父类的所有属性
      *
-     * @param clazz
+     * @param superClass
      * @return
      */
-    private static void getSuperFields(Class<? extends Type> clazz, List<Field> fieldList) {
-        Type genericSuperClass = clazz.getGenericSuperclass();
-        if(genericSuperClass != null && !genericSuperClass.equals(Object.class)){
-            getSuperFields(clazz, fieldList);
+    private static void getSuperFields(Type superClass, List<Field> fieldList) {
+        Type tempType = ((Class) superClass).getSuperclass();
+        if(tempType != null && !tempType.equals(Object.class)){
+            getSuperFields(tempType, fieldList);
         }
-        Field[] declaredFields = clazz.getDeclaredFields();
+        Field[] declaredFields = ((Class) superClass).getDeclaredFields();
         for(Field field : declaredFields){
             fieldList.add(field);
         }

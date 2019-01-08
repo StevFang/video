@@ -61,7 +61,9 @@ public class DataBaseUtils {
      */
     public static final String COLUMN_SIZE = "COLUMN_SIZE";
 
-
+    /**
+     * 数据库表结构定义DTO内存缓存
+     */
     private static Map<String, TableDTO> tableDTOMap = Maps.newConcurrentMap();
 
     /**
@@ -171,10 +173,12 @@ public class DataBaseUtils {
                     if(whereSql.length() > initWhereSqlLen){
                         whereSql.append(" AND ");
                     }
-                    whereSql.append(columnName).append("=").append(fieldValue);
+                    whereSql.append(columnName).append(" = ? ");
                 }
             }
         }
+
+        deleteSql.append(whereSql);
 
         return deleteSql.toString();
     }
@@ -211,13 +215,17 @@ public class DataBaseUtils {
                         if(whereSql.length() > initWhereSqlLen){
                             whereSql.append(" AND ");
                         }
-                        whereSql.append(columnName).append("=?");
+                        whereSql.append(columnName).append(" = ? ");
                     }else {
-                        updateSql.append(columnName).append("=?").append(", ");
+                        updateSql.append(columnName).append(" = ? ").append(", ");
                     }
                 }
             }
         }
+        int updateSqlLen = updateSql.length();
+        updateSql = updateSql.replace(updateSqlLen - 2, updateSqlLen, "");
+
+        updateSql.append(whereSql);
 
         return updateSql.toString();
     }

@@ -50,8 +50,8 @@ public class DaoTest {
         uploadRecord.setParentId(0L);
         uploadRecord.setCreatedOn(new Date());
         uploadRecord.setUpdatedOn(new Date());
-        uploadRecord.setCreatedBy(1L);
-        uploadRecord.setUpdatedBy(1L);
+        // uploadRecord.setCreatedBy(1L);
+        // uploadRecord.setUpdatedBy(1L);
         uploadRecord.setCode("UP2019010800001");
         uploadRecord.setOriginName("小.png");
         uploadRecord.setSaveName(ConvertUtil.getFormatUUID());
