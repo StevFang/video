@@ -8,4 +8,7 @@ public interface ModelService {
 
     Integer save(Object obj);
 
+    Integer update(Object obj);
+
+    Integer delete(Object obj);
 }

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,6 +19,8 @@ import java.util.Map;
 public class TableDTO {
 
     private String tableName;
+
+    private List<String> primaryPropertyList;
 
     private Map<String, String> propertyColumnMap;
 

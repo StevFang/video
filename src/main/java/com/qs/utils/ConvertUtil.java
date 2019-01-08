@@ -1,9 +1,13 @@
 package com.qs.utils;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.codec.binary.Base64;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -59,4 +63,39 @@ public class ConvertUtil {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
+    /**
+     * 获取一个类型的所有属性
+     *
+     * @param clazz
+     * @return
+     */
+    public static List<Field> getClassFields(Class<?> clazz){
+        List<Field> fieldList = Lists.newArrayList();
+        Type genericSuperClass = clazz.getGenericSuperclass();
+        if(genericSuperClass != null && !genericSuperClass.equals(Object.class)){
+            getSuperFields(genericSuperClass.getClass(), fieldList);
+        }
+        Field[] declaredFields = clazz.getDeclaredFields();
+        for(Field field : declaredFields){
+            fieldList.add(field);
+        }
+        return fieldList;
+    }
+
+    /**
+     * 获取父类的所有属性
+     *
+     * @param clazz
+     * @return
+     */
+    private static void getSuperFields(Class<? extends Type> clazz, List<Field> fieldList) {
+        Type genericSuperClass = clazz.getGenericSuperclass();
+        if(genericSuperClass != null && !genericSuperClass.equals(Object.class)){
+            getSuperFields(clazz, fieldList);
+        }
+        Field[] declaredFields = clazz.getDeclaredFields();
+        for(Field field : declaredFields){
+            fieldList.add(field);
+        }
+    }
 }
