@@ -241,7 +241,7 @@ public class DataBaseUtils {
     public static String getSaveSQL(Object obj, TableDTO tableDTO) throws Exception{
         StringBuilder saveSql = new StringBuilder();
         String tableName = tableDTO.getTableName();
-        saveSql.append("INSERT TABLE ").append(tableName);
+        saveSql.append("INSERT INTO ").append(tableName);
 
         StringBuilder columnSql = new StringBuilder();
         StringBuilder prepareStatementSql = new StringBuilder();
