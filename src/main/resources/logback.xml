@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration scan="true" scanPeriod="1800 seconds" debug="false" >
     <property name="app_name" value="video"/>
-    <property name="base_path" value="E:/video"/>
+    <property name="base_path" value="E:/logs/video"/>
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
     <property name="LOG_HOME" value="${base_path}/logs/" />
     <!-- 控制台输出 -->
