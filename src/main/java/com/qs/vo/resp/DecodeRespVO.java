@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DecodeRespVO {
 
-    private String videoId;
+    private Long videoId;
 
     private String decodeLog;
 

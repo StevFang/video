@@ -1,5 +1,6 @@
 package com.qs.service.upload;
 
+import com.qs.service.ModelService;
 import com.qs.service.UploadService;
 import com.qs.utils.ConvertUtil;
 import com.qs.utils.QSFileUtils;
@@ -7,6 +8,7 @@ import com.qs.utils.VideoExceptionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,9 @@ public class UploadServiceImpl implements UploadService {
 
     @Value("${server.visit.path}")
     private String visitPath;
+
+    @Autowired
+    private ModelService modelService;
 
     @Override
     public String execUpload(MultipartFile multipartFile) {

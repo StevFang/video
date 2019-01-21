@@ -1,7 +1,7 @@
 package com.qs.controller;
 
 import com.qs.enums.VideoCodeEnum;
-import com.qs.service.upload.UploadServiceImpl;
+import com.qs.service.UploadService;
 import com.qs.utils.CommonUtils;
 import com.qs.utils.ConvertUtil;
 import com.qs.utils.VideoExceptionUtils;
@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UploadController {
 
     @Autowired
-    private UploadServiceImpl uploadService;
+    private UploadService uploadService;
 
     /**
      * 接收文件上传

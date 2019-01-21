@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ModelServiceImpl implements ModelService {
 
+    private static final String prefix = "VIDEO_";
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

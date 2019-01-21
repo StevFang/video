@@ -21,7 +21,7 @@ public class DecodeReqVO {
     /**
      * 标识源视频
      */
-    private String videoId;
+    private Long videoId;
 
     /**
      * 源视频名称

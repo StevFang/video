@@ -69,8 +69,7 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public DecodeRespVO decodeVideo(DecodeReqVO decodeReqVO) {
 
-        DecodeffmpegDTO config =
-                DecodeffmpegDTO.getInstanceOf(decodeReqVO, ffmpegPath, memcoderPath, savePath);
+        DecodeffmpegDTO config = DecodeffmpegDTO.getInstanceOf(decodeReqVO, ffmpegPath, memcoderPath, savePath);
 
         // ffmpeg环境是否配置正确
         if (config == null) {

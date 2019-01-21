@@ -88,8 +88,7 @@ public class VideoController {
                 return commonRespVO;
             }
 
-            LiveffmpegDTO config =
-                    LiveffmpegDTO.getInstanceOf(liveReqVO, ffmpegPath);
+            LiveffmpegDTO config = LiveffmpegDTO.getInstanceOf(liveReqVO, ffmpegPath);
             // ffmpeg环境是否配置正确
             if (config == null) {
                 commonRespVO = CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.CONFIG_ERROR);
