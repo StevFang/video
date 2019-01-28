@@ -39,13 +39,13 @@ public interface VideoService {
      * @param decodeReqVO
      * @return
      */
-    DecodeRespVO decodeVideo(DecodeReqVO decodeReqVO);
+    CommonRespVO decodeVideo(DecodeReqVO decodeReqVO);
 
     /**
      * 直播推流
      *
-     * @param fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig
+     * @param liveffmpegDTO
      * @return
      */
-    LiveRespVO livePushStream(LiveffmpegDTO fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig);
+    CommonRespVO livePushStream(LiveffmpegDTO liveffmpegDTO);
 }

@@ -16,6 +16,13 @@ public class CommonUtils {
         return CommonRespVO.builder().code(videoCodeEnum.getCode()).msg(videoCodeEnum.getLabel()).build();
     }
 
+    public static CommonRespVO getCommonRespVO(VideoCodeEnum videoCodeEnum, Object data){
+        return CommonRespVO.builder()
+                .code(videoCodeEnum.getCode())
+                .msg(videoCodeEnum.getLabel())
+                .data(data).build();
+    }
+
     /**
      * 获取分页页数的算法
      *

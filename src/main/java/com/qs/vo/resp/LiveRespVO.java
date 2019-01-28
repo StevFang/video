@@ -18,6 +18,4 @@ public class LiveRespVO {
 
     private String output;
 
-    private String message;
-
 }

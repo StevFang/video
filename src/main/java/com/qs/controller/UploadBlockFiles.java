@@ -9,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 文件上传
@@ -23,32 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Scope("prototype")
 @RequestMapping("/upload")
-public class UploadController {
+public class UploadBlockFiles {
 
     @Autowired
     private UploadService uploadService;
-
-    /**
-     * 接收文件上传
-     *
-     * @param request
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(value = "/single", method = {RequestMethod.POST})
-    public CommonRespVO uploadVideo(HttpServletRequest request) {
-        CommonRespVO commonRespVO = null;
-        try {
-            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-            MultipartFile multipartFile = multipartRequest.getFile("file");
-            // 处理视频上传
-            commonRespVO = uploadService.execUpload(multipartFile);
-        } catch (Exception e) {
-            log.error("上传视频接收报错,错误原因：" + e.getMessage(), e);
-            VideoExceptionUtils.fail("上传失败！");
-        }
-        return commonRespVO;
-    }
 
     /**
      * 大文件分片上传服务接收端

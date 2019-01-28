@@ -3,8 +3,10 @@ package com.qs.service.video;
 import com.google.common.collect.Lists;
 import com.qs.dto.config.DecodeffmpegDTO;
 import com.qs.dto.config.LiveffmpegDTO;
+import com.qs.enums.VideoCodeEnum;
 import com.qs.service.VideoService;
 import com.qs.service.manager.FfmpegManagerImpl;
+import com.qs.utils.CommonUtils;
 import com.qs.vo.req.DecodeReqVO;
 import com.qs.vo.req.VideoReqVO;
 import com.qs.vo.resp.DecodeRespVO;
@@ -63,38 +65,48 @@ public class VideoServiceImpl implements VideoService {
 
     /**
      * 视频解码转码
+     *
      * @param decodeReqVO
      * @return
      */
     @Override
-    public DecodeRespVO decodeVideo(DecodeReqVO decodeReqVO) {
-
+    public CommonRespVO decodeVideo(DecodeReqVO decodeReqVO) {
         DecodeffmpegDTO config = DecodeffmpegDTO.getInstanceOf(decodeReqVO, ffmpegPath, memcoderPath, savePath);
-
+        DecodeRespVO decodeRespVO;
         // ffmpeg环境是否配置正确
         if (config == null) {
             log.error("配置未正确加载，无法执行");
-            return new DecodeRespVO(decodeReqVO.getVideoId(), "配置未正确加载，无法执行");
+            decodeRespVO = DecodeRespVO.builder()
+                    .videoId(decodeReqVO.getVideoId())
+                    .decodeLog("配置未正确加载，无法执行").build();
+            return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_DECODE_ERROR, decodeRespVO);
         }
         // 参数是否符合要求
         if (StringUtils.isBlank(config.getAppName())) {
             log.error("参数不正确，无法执行");
-            return new DecodeRespVO(decodeReqVO.getVideoId(), "参数不正确，无法执行");
+            decodeRespVO = DecodeRespVO.builder()
+                    .videoId(decodeReqVO.getVideoId())
+                    .decodeLog("参数不正确，无法执行").build();
+            return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_DECODE_ERROR, decodeRespVO);
         }
         ffmpegManager.start(config);
-
-        return new DecodeRespVO(decodeReqVO.getVideoId(), "正在处理中，请稍后");
+        decodeRespVO = DecodeRespVO.builder()
+                .videoId(decodeReqVO.getVideoId())
+                .decodeLog("正在处理中，请稍后").build();
+        return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_DECODE_SUCCESS, decodeRespVO);
     }
 
     /**
      * 直播推流
-     * @param fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig
+     *
+     * @param liveffmpegDTO
      * @return
      */
     @Override
-    public LiveRespVO livePushStream(LiveffmpegDTO fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig) {
-        ffmpegManager.start(fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig);
-        return LiveRespVO.builder().output(fastForwardMovingPictureExpertsGroupLiveConfigDTOConfig.getOutput()).message("推流成功").build();
+    public CommonRespVO livePushStream(LiveffmpegDTO liveffmpegDTO) {
+        ffmpegManager.start(liveffmpegDTO);
+        LiveRespVO data = LiveRespVO.builder().output(liveffmpegDTO.getOutput()).build();
+        return CommonUtils.getCommonRespVO(VideoCodeEnum.LIVE_SUCCESS, data);
     }
 
 }
