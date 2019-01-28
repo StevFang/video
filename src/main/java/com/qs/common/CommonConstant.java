@@ -8,6 +8,8 @@ package com.qs.common;
  */
 public class CommonConstant {
 
+    public static final String PREFIX = "VIDEO_";
+
     public static final String BLANK = "";
 
     /**
@@ -16,5 +18,8 @@ public class CommonConstant {
     public static final String TWO_PART_0 = "0";
     public static final String TWO_PART_1 = "1";
     public static final String TWO_PART_2 = "2";
+
+    public static final String OID_KEY = "oid";
+    public static final String CODE_KEY = "code";
 
 }

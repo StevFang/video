@@ -8,7 +8,8 @@ package com.qs.enums;
  */
 public enum VideoCodeEnum {
 
-    UPLOAD_SUCCESS("10000", "上传成功"),
+    UPLOAD_SUCCESS("0", "上传成功"),
+    UPLOAD_ERROR("-1", "上传失败"),
 
     QUERY_SUCCESS("20000", "操作成功"),
     QUERY_ERROR("20010", "查询异常"),

@@ -1,10 +1,15 @@
 package com.qs.service.upload;
 
+import com.qs.enums.VideoCodeEnum;
+import com.qs.model.upload.UploadRecord;
 import com.qs.service.ModelService;
 import com.qs.service.UploadService;
+import com.qs.utils.CommonUtils;
 import com.qs.utils.ConvertUtil;
-import com.qs.utils.QSFileUtils;
+import com.qs.utils.QsFileUtils;
 import com.qs.utils.VideoExceptionUtils;
+import com.qs.vo.req.VideoUploadReqVo;
+import com.qs.vo.resp.CommonRespVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
@@ -40,12 +45,11 @@ public class UploadServiceImpl implements UploadService {
     private ModelService modelService;
 
     @Override
-    public String execUpload(MultipartFile multipartFile) {
-
+    public CommonRespVO execUpload(MultipartFile multipartFile) {
         VideoExceptionUtils.assertNotNull(multipartFile, "上传文件未获取到！");
 
         File dirs = new File(savePath);
-        if(!dirs.exists()){
+        if (!dirs.exists()) {
             dirs.mkdirs();
         }
         // 给上传上来的文件一个新的名字
@@ -53,25 +57,23 @@ public class UploadServiceImpl implements UploadService {
         String newFileName = ConvertUtil.getBase64Time() + oldFileName.substring(oldFileName.lastIndexOf("."));
         String savePathAndName = savePath + newFileName;
         File uploadFile = new File(savePathAndName);
-        try{
+        try {
             uploadFile.createNewFile();
             DigestUtils.md5Hex(multipartFile.getInputStream());
             FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), uploadFile);
-
-
-        }catch (Exception e){
+            return getSuccessVO(VideoCodeEnum.UPLOAD_SUCCESS, visitPath + newFileName);
+        } catch (Exception e) {
             log.error("创建目标文件异常", e);
-            VideoExceptionUtils.fail("上传文件保存异常！");
             // 判断文件是否存在，存在即删除
-            if(uploadFile.exists()){
+            if (uploadFile.exists()) {
                 uploadFile.delete();
             }
+            return getErrorVO(VideoCodeEnum.UPLOAD_ERROR, e.getMessage());
         }
-        return visitPath + newFileName;
     }
 
     @Override
-    public String uploadOneBlockFile(MultipartFile multipartFile, String targetFilePath){
+    public CommonRespVO uploadOneBlockFile(MultipartFile multipartFile, String targetFilePath) {
 
         VideoExceptionUtils.assertNotNull(multipartFile, "未获取到上传文件");
 
@@ -87,16 +89,15 @@ public class UploadServiceImpl implements UploadService {
             destTempFile.createNewFile();
             DigestUtils.md5Hex(multipartFile.getInputStream());
             FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), destTempFile);
+            return getSuccessVO(VideoCodeEnum.UPLOAD_SUCCESS, visitPath + targetFilePath);
         } catch (IOException e) {
             log.error("文件写入异常，异常原因：" + e.getMessage(), e);
-            VideoExceptionUtils.fail("文件写入发生错误");
+            return getErrorVO(VideoCodeEnum.UPLOAD_ERROR, e.getMessage());
         }
-
-        return visitPath + targetFilePath;
     }
 
     @Override
-    public String uploadMultiBlockFile(MultipartFile multipartFile, String blockIndex, String blockNumber, String randomUUID, String targetFilePath) {
+    public CommonRespVO uploadMultiBlockFile(MultipartFile multipartFile, String blockIndex, String blockNumber, String randomUUID, String targetFilePath) {
         try {
             String fileRealName = targetFilePath;
             String fileIndexPath = targetFilePath + ".index";
@@ -113,7 +114,7 @@ public class UploadServiceImpl implements UploadService {
                 log.error("新建文件异常，异常原因：" + e.getMessage(), e);
                 VideoExceptionUtils.fail("新建文件发生异常！");
             }
-            QSFileUtils.fileConsistent(randomUUID, fileIndexPath, targetFilePath);
+            QsFileUtils.fileConsistent(randomUUID, fileIndexPath, targetFilePath);
             byte[] buf = new byte[1024 * 1024 * 2];
             int len;
             RandomAccessFile fileWrite = new RandomAccessFile(destTempFile, "rw");
@@ -125,18 +126,52 @@ public class UploadServiceImpl implements UploadService {
             fileReader.close();
             fileWrite.close();
 
-            if (QSFileUtils.fileComplete(randomUUID, fileIndexPath, Integer.valueOf(blockIndex), Integer.valueOf(blockNumber))) {
+            if (QsFileUtils.fileComplete(randomUUID, fileIndexPath, Integer.valueOf(blockIndex), Integer.valueOf(blockNumber))) {
                 File file = new File(targetFilePath);
                 file.renameTo(new File(fileRealName));
             }
+            return getSuccessVO(VideoCodeEnum.UPLOAD_SUCCESS, visitPath + targetFilePath);
         } catch (IOException e) {
             log.error("part文件写入异常，异常原因：" + e.getMessage(), e);
-            VideoExceptionUtils.fail("文件写入异常！");
+            return getErrorVO(VideoCodeEnum.UPLOAD_ERROR, e.getMessage());
         }
-
-        return visitPath + targetFilePath;
     }
 
+    @Override
+    public void saveUploadRecord(VideoUploadReqVo videoUploadReqVo) {
+        UploadRecord uploadRecord = modelService.createObject(UploadRecord.class);
+        uploadRecord.setCode(CommonUtils.getTimeCodeSuffix(uploadRecord.getClass()));
+        uploadRecord.setExtName(videoUploadReqVo.getExtName());
+        uploadRecord.setSaveName(videoUploadReqVo.getSaveName());
+        uploadRecord.setOriginName(videoUploadReqVo.getOriginName());
+        modelService.save(uploadRecord);
+    }
 
+    /**
+     * 上传成功的VO
+     *
+     * @param videoCodeEnum
+     * @param data
+     * @return
+     */
+    private CommonRespVO getSuccessVO(VideoCodeEnum videoCodeEnum, Object data) {
+        return CommonRespVO.builder()
+                .code(videoCodeEnum.getCode())
+                .msg(videoCodeEnum.getLabel())
+                .data(data).build();
+    }
 
+    /**
+     * 上传失败的VO
+     *
+     * @param videoCodeEnum
+     * @param data
+     * @return
+     */
+    private CommonRespVO getErrorVO(VideoCodeEnum videoCodeEnum, Object data){
+        return CommonRespVO.builder()
+                .code(videoCodeEnum.getCode())
+                .msg("上传文件保存异常!")
+                .data(data).build();
+    }
 }

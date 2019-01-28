@@ -1,5 +1,6 @@
 package com.qs.utils;
 
+import com.qs.common.CommonConstant;
 import com.qs.enums.VideoCodeEnum;
 import com.qs.vo.resp.CommonRespVO;
 
@@ -17,6 +18,7 @@ public class CommonUtils {
 
     /**
      * 获取分页页数的算法
+     *
      * @param total
      * @param pageSize
      * @return
@@ -33,6 +35,48 @@ public class CommonUtils {
         }else{
             return 0;
         }
+    }
+
+    /**
+     * 获取全局的oid
+     *
+     * @return
+     */
+    public static Long getOid(){
+        String key = CommonConstant.PREFIX + CommonConstant.OID_KEY;
+        Object contextOid = RedisUtils.get(key);
+        if(contextOid == null){
+            RedisUtils.set(key, 0);
+        }
+        return RedisUtils.incr(key, 1);
+    }
+
+    /**
+     * 获取model类的序号
+     *
+     * @param tClass
+     * @return
+     */
+    public static Long getModelSeqNo(Class<?> tClass){
+        String tClassName = tClass.getSimpleName();
+        String key = CommonConstant.PREFIX + tClassName + "_" + CommonConstant.CODE_KEY;
+        Object modelSeqNo = RedisUtils.get(key);
+        if(modelSeqNo == null){
+            RedisUtils.set(key, 0);
+        }
+        return RedisUtils.incr(key, 1);
+    }
+
+    /**
+     * 获取model类的时间序号后缀
+     *
+     * @param tClass
+     * @return
+     */
+    public static String getTimeCodeSuffix(Class<?> tClass){
+        String timeCodeSuffix = DateUtils.format(DateUtils.now(), "yyyyMMdd");
+        Long modelSeqNo = getModelSeqNo(tClass);
+        return timeCodeSuffix + modelSeqNo;
     }
 
 }

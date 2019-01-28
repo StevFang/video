@@ -10,7 +10,7 @@ import java.io.RandomAccessFile;
  *
  * @author FBin
  */
-public class QSFileUtils {
+public class QsFileUtils {
 
 
     /**

@@ -2,12 +2,16 @@ package com.qs.service.common;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.qs.dto.common.TableDTO;
+import com.qs.model.AbstractModel;
 import com.qs.service.ModelService;
-import com.qs.utils.DataBaseUtils;
+import com.qs.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.Method;
+import java.util.Date;
 
 /**
  * @author FBin
@@ -17,10 +21,31 @@ import org.springframework.stereotype.Service;
 @Service
 public class ModelServiceImpl implements ModelService {
 
-    private static final String prefix = "VIDEO_";
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Override
+    public <T> T createObject(Class<T> tClass) {
+        try{
+            T obj = tClass.newInstance();
+            Method method = tClass.getDeclaredMethod("setOid", Long.class);
+            method.invoke(obj, CommonUtils.getOid());
+            method = tClass.getDeclaredMethod("setParentId", Long.class);
+            method.invoke(obj, 0L);
+            method = tClass.getDeclaredMethod("setCreatedBy", Long.class);
+            method.invoke(obj, SessionUtils.getCurrentUserId(""));
+            method = tClass.getDeclaredMethod("setCreatedOn", Date.class);
+            method.invoke(obj, DateUtils.now());
+            method = tClass.getDeclaredMethod("setCreatedBy", Long.class);
+            method.invoke(obj, SessionUtils.getCurrentUserId(""));
+            method = tClass.getDeclaredMethod("setUpdatedOn", Date.class);
+            method.invoke(obj, DateUtils.now());
+            return obj;
+        }catch (Exception e){
+            log.error(e.getMessage(), e);
+        }
+        return null;
+    }
 
     /**
      * 保存实例

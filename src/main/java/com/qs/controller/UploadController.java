@@ -1,8 +1,6 @@
 package com.qs.controller;
 
-import com.qs.enums.VideoCodeEnum;
 import com.qs.service.UploadService;
-import com.qs.utils.CommonUtils;
 import com.qs.utils.ConvertUtil;
 import com.qs.utils.VideoExceptionUtils;
 import com.qs.vo.resp.CommonRespVO;
@@ -37,15 +35,14 @@ public class UploadController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/simple", method = {RequestMethod.POST})
+    @RequestMapping(value = "/single", method = {RequestMethod.POST})
     public CommonRespVO uploadVideo(HttpServletRequest request) {
-        CommonRespVO commonRespVO = CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.UPLOAD_SUCCESS);
+        CommonRespVO commonRespVO = null;
         try {
-            MultipartHttpServletRequest multipartRequest= (MultipartHttpServletRequest) request;
+            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
             MultipartFile multipartFile = multipartRequest.getFile("file");
             // 处理视频上传
-            String url = uploadService.execUpload(multipartFile);
-            commonRespVO.setData(url);
+            commonRespVO = uploadService.execUpload(multipartFile);
         } catch (Exception e) {
             log.error("上传视频接收报错,错误原因：" + e.getMessage(), e);
             VideoExceptionUtils.fail("上传失败！");
@@ -56,11 +53,11 @@ public class UploadController {
     /**
      * 大文件分片上传服务接收端
      *
-     * @param blockIndex 这次请求的是第几块
-     * @param blockNumber 将文件分成的总块数
+     * @param blockIndex     这次请求的是第几块
+     * @param blockNumber    将文件分成的总块数
      * @param targetFilePath 要根据这个路径制定块文件的路径和生成文件的路径
-     * @param randomUUID 标识是否同一个文件
-     * @param multipartFile 传到后台的具体文件
+     * @param randomUUID     标识是否同一个文件
+     * @param multipartFile  传到后台的具体文件
      * @return
      */
     @ResponseBody
@@ -71,15 +68,14 @@ public class UploadController {
                                       @RequestParam(value = "randomUUID", required = false) String randomUUID,
                                       @RequestParam(value = "file", required = false) MultipartFile multipartFile) {
         VideoExceptionUtils.assertNotBlank(blockNumber, "参数blockNumber不能为空！");
-
+        CommonRespVO commonRespVO = null;
         // 文件不走分块上传
-        if(ConvertUtil.getInt(blockNumber) == 1){
-            uploadService.uploadOneBlockFile(multipartFile, targetFilePath);
-        }else if(ConvertUtil.getInt(blockNumber) > 1) {
-            uploadService.uploadMultiBlockFile(multipartFile, blockIndex, blockNumber, randomUUID, targetFilePath);
+        if (ConvertUtil.getInt(blockNumber) == 1) {
+            commonRespVO = uploadService.uploadOneBlockFile(multipartFile, targetFilePath);
+        } else if (ConvertUtil.getInt(blockNumber) > 1) {
+            commonRespVO = uploadService.uploadMultiBlockFile(multipartFile, blockIndex, blockNumber, randomUUID, targetFilePath);
         }
-
-        return CommonUtils.getVideoRespVOByCodeEnum(VideoCodeEnum.UPLOAD_SUCCESS);
+        return commonRespVO;
     }
 
 }

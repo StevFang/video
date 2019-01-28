@@ -18,7 +18,7 @@ public interface UserDao {
     /**
      * 根据Oid查询 |
      *
-     * @param oid
+     * @param oid 用户oid
      * @return
      */
     User findOne(Long oid);
@@ -26,7 +26,7 @@ public interface UserDao {
     /**
      * 根据UserName查询 |
      *
-     * @param userName
+     * @param userName 用户名
      * @return
      */
     List<User> findByUserName(String userName);
@@ -41,7 +41,7 @@ public interface UserDao {
     /**
      * 根据参数查询 |
      *
-     * @param queryParam
+     * @param queryParam 查询入参
      * @return
      */
     List<User> findAllByParams(QueryParamDTO queryParam);

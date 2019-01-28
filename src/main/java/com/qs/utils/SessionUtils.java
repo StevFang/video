@@ -20,7 +20,7 @@ public class SessionUtils {
      * @param ssoSessionId
      * @return
      */
-    public boolean checkOnline(String ssoSessionId){
+    public static boolean checkOnline(String ssoSessionId){
         HttpSession httpSession = (HttpSession) RedisUtils.get(ssoSessionId);
         if(httpSession != null){
             User user = (User) httpSession.getAttribute(SessionUtils.VIDEO_USER);
@@ -37,7 +37,7 @@ public class SessionUtils {
      * @param ssoSessionId
      * @return
      */
-    public User getCurrentUser(String ssoSessionId){
+    public static User getCurrentUser(String ssoSessionId){
         HttpSession httpSession = (HttpSession) RedisUtils.get(ssoSessionId);
         if(httpSession != null){
             return (User) httpSession.getAttribute(SessionUtils.VIDEO_USER);
@@ -45,4 +45,14 @@ public class SessionUtils {
         return null;
     }
 
+    /**
+     * 获取系统当前用户oid
+     *
+     * @param ssoSessionId
+     * @return
+     */
+    public static Long getCurrentUserId(String ssoSessionId){
+        User user = getCurrentUser(ssoSessionId);
+        return user == null ? null : user.getOid();
+    }
 }

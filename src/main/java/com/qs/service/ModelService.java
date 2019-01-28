@@ -7,6 +7,15 @@ package com.qs.service;
 public interface ModelService {
 
     /**
+     * 创建对象实例
+     *
+     * @param tClass
+     * @param <T>
+     * @return
+     */
+    <T> T createObject(Class<T> tClass);
+
+    /**
      * 保存对象实例
      *
      * @param obj

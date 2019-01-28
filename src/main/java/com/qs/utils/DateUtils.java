@@ -98,4 +98,7 @@ public class DateUtils {
         return formatter;
     }
 
+    public static Date now(){
+        return new Date();
+    }
 }
