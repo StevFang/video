@@ -105,7 +105,7 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public CommonRespVO livePushStream(LiveffmpegDTO liveffmpegDTO) {
         ffmpegManager.start(liveffmpegDTO);
-        LiveRespVO data = LiveRespVO.builder().output(liveffmpegDTO.getOutput()).build();
+        LiveRespVO data = LiveRespVO.builder().output(liveffmpegDTO.getOutput() + liveffmpegDTO.getAppName()).build();
         return CommonUtils.getCommonRespVO(VideoCodeEnum.LIVE_SUCCESS, data);
     }
 

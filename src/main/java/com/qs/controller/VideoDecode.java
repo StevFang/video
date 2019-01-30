@@ -9,10 +9,7 @@ import com.qs.vo.resp.DecodeRespVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 视频转码
@@ -36,7 +33,7 @@ public class VideoDecode {
      */
     @ResponseBody
     @RequestMapping(value = "/decode", method = { RequestMethod.POST })
-    public CommonRespVO videoDecode(DecodeReqVO decodeReqVO){
+    public CommonRespVO videoDecode(@RequestBody DecodeReqVO decodeReqVO){
         return videoService.decodeVideo(decodeReqVO);
     }
 

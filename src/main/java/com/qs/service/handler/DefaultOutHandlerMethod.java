@@ -21,9 +21,9 @@ public class DefaultOutHandlerMethod implements OutHandlerMethod {
 	@Override
 	public void parse(String appName, String msg) {
 		//过滤消息
-		if (msg.indexOf(ERROR_PREFIX) != -1) {
+		if (msg.contains(ERROR_PREFIX)) {
 			log.error("appName=" + appName + " 发生网络异常丢包，消息体：" + msg);
-		}else if(msg.indexOf(FRAME_PREFIX)!=-1){
+		}else if(msg.contains(FRAME_PREFIX)){
 			log.error("appName=" + appName + " :" + msg);
 		}else{
 			log.info("appName=" + appName + " :" + msg);

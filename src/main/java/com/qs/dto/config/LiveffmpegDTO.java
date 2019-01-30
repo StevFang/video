@@ -76,6 +76,7 @@ public class LiveffmpegDTO extends BaseffmpegDTO {
         return LiveffmpegDTO.builder()
                 .ffmpegPath(ffmpegPath)
                 .input(liveReqVO.getInput())
+                .output(liveReqVO.getOutput())
                 .appName(liveReqVO.getAppName())
                 .twoPart(liveReqVO.getTwoPart())
                 .codec(liveReqVO.getCodec())

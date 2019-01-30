@@ -70,7 +70,7 @@ public class DecodeffmpegDTO extends BaseffmpegDTO {
     private String freq;
 
     /**
-     * -qscale <数值> 以<数值>质量为基础的VBR，取值0.01-255，约小质量越好
+     * -qscale <数值> 以<数值>质量为基础的VBR，取值0.01-255，越小质量越好
      */
     private String qscale;
 

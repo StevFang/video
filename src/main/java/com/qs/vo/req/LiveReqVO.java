@@ -22,6 +22,11 @@ public class LiveReqVO {
     private String input;
 
     /**
+     * 视频输出地址
+     */
+    private String output;
+
+    /**
      * 应用名
      */
     private String appName;
