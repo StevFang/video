@@ -1,6 +1,7 @@
 package com.qs.service.command.ffmpeg;
 
 import com.qs.dto.config.DecodeffmpegDTO;
+import com.qs.enums.base.VideoTypeEnum;
 import com.qs.service.CommandService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -28,16 +29,17 @@ public class FfmpegDecodeCommandServiceImpl implements CommandService<Decodeffmp
         }
         // 校验视频类型
         int type = checkVideoType(sourcePath);
-        if(type == 0){
-            // 可以通过ffmpeg转码的视频类型
-            return getFastForwardMPEGCommand(config);
-        }else if(type == 1){
-            // 不可以通过ffmpeg转码的视频类型，可以先用别的工具（mencoder）转换为avi(ffmpeg能解析的)格式.
-            sourcePath = processAVI(config);
-            config.setSourcePath(sourcePath);
-            return getFastForwardMPEGCommand(config);
+        switch (type){
+            case 0:
+                // 可以通过ffmpeg转码的视频类型
+                return getFastForwardMPEGCommand(config);
+            case 1:
+                // 不可以通过ffmpeg转码的视频类型，可以先用别的工具（mencoder）转换为avi(ffmpeg能解析的)格式.
+                sourcePath = processAVI(config);
+                config.setSourcePath(sourcePath);
+                return getFastForwardMPEGCommand(config);
+            default: return null;
         }
-        return null;
     }
 
     /**
@@ -59,36 +61,34 @@ public class FfmpegDecodeCommandServiceImpl implements CommandService<Decodeffmp
      */
     private int checkVideoType(String path) {
         String type = path.substring(path.lastIndexOf(".") + 1, path.length()).toLowerCase();
-        // ffmpeg能解析的格式：（asx，asf，mpg，wmv，3gp，mp4，mov，avi，flv等）
-        if (type.equals("avi")) {
-            return 0;
-        } else if (type.equals("mpg")) {
-            return 0;
-        } else if (type.equals("wmv")) {
-            return 0;
-        } else if (type.equals("3gp")) {
-            return 0;
-        } else if (type.equals("mov")) {
-            return 0;
-        } else if (type.equals("mp4")) {
-            return 0;
-        } else if (type.equals("asf")) {
-            return 0;
-        } else if (type.equals("asx")) {
-            return 0;
-        } else if (type.equals("flv")) {
-            return 0;
+        try{
+            VideoTypeEnum videoTypeEnum = VideoTypeEnum.valueOf(type);
+            /**
+             * ffmpeg能解析的格式：（asx，asf，mpg，wmv，3gp，mp4，mov，avi，flv等）
+             * 对ffmpeg无法解析的文件格式(wmv9，rm，rmvb等),
+             * 可以先用别的工具（mencoder）转换为avi(ffmpeg能解析的)格式.
+             */
+            switch (videoTypeEnum){
+                case AVI:
+                case MPG:
+                case WMV:
+                case THREE_GP:
+                case MOV:
+                case MP_FOUR:
+                case ASF:
+                case ASX:
+                case FLV:
+                    return 0;
+                case WMV_NINE:
+                case RM:
+                case RMVB:
+                    return 1;
+                default: return 9;
+            }
+        }catch (Exception e){
+            log.error(e.getMessage(), e);
+            return 9;
         }
-        // 对ffmpeg无法解析的文件格式(wmv9，rm，rmvb等),
-        // 可以先用别的工具（mencoder）转换为avi(ffmpeg能解析的)格式.
-        else if (type.equals("wmv9")) {
-            return 1;
-        } else if (type.equals("rm")) {
-            return 1;
-        } else if (type.equals("rmvb")) {
-            return 1;
-        }
-        return 9;
     }
 
     /**
