@@ -1,6 +1,6 @@
-package com.qs.controller;
+package com.qs.controller.video;
 
-import com.qs.dto.config.LiveffmpegDTO;
+import com.qs.dto.config.ffmpeg.LiveOnlineDTO;
 import com.qs.enums.VideoCodeEnum;
 import com.qs.service.VideoService;
 import com.qs.utils.VideoExceptionUtils;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Scope("prototype")
 @RequestMapping("/video")
-public class VideoLive {
+public class LiveOnlineVideo {
 
     @Value("${server.ffmpeg.path}")
     private String ffmpegPath;
@@ -34,8 +34,8 @@ public class VideoLive {
     @ResponseBody
     @RequestMapping(value = "/live", method = { RequestMethod.GET, RequestMethod.POST })
     public CommonRespVO live(@RequestBody LiveReqVO liveReqVO){
-        LiveffmpegDTO liveffmpegDTO = this.checkParam(liveReqVO);
-        return videoService.livePushStream(liveffmpegDTO);
+        LiveOnlineDTO liveOnlineDTO = this.checkParam(liveReqVO);
+        return videoService.livePushStream(liveOnlineDTO);
     }
 
     /**
@@ -44,14 +44,14 @@ public class VideoLive {
      * @param liveReqVO
      * @return
      */
-    private LiveffmpegDTO checkParam(LiveReqVO liveReqVO){
+    private LiveOnlineDTO checkParam(LiveReqVO liveReqVO){
         // 参数是否符合要求
         if (StringUtils.isBlank(liveReqVO.getAppName())) {
             VideoExceptionUtils.fail(String.format(VideoCodeEnum.PARAM_CHECK_ERROR.getLabel(), "appName", liveReqVO.getAppName()));
         }
-        LiveffmpegDTO liveffmpegDTO = LiveffmpegDTO.getInstanceOf(liveReqVO, ffmpegPath);
+        LiveOnlineDTO liveOnlineDTO = LiveOnlineDTO.getInstanceOf(liveReqVO, ffmpegPath);
         // ffmpeg环境是否配置正确
-        VideoExceptionUtils.assertNotNull(liveffmpegDTO, VideoCodeEnum.CONFIG_ERROR.getLabel());
-        return liveffmpegDTO;
+        VideoExceptionUtils.assertNotNull(liveOnlineDTO, VideoCodeEnum.CONFIG_ERROR.getLabel());
+        return liveOnlineDTO;
     }
 }

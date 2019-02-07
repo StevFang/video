@@ -1,4 +1,4 @@
-package com.qs.controller;
+package com.qs.controller.upload;
 
 import com.qs.service.UploadService;
 import com.qs.utils.ConvertUtil;

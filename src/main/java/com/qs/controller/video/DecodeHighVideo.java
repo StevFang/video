@@ -1,11 +1,8 @@
-package com.qs.controller;
+package com.qs.controller.video;
 
-import com.qs.enums.VideoCodeEnum;
 import com.qs.service.VideoService;
-import com.qs.utils.CommonUtils;
-import com.qs.vo.req.DecodeReqVO;
+import com.qs.vo.req.DecodeHighReqVO;
 import com.qs.vo.resp.CommonRespVO;
-import com.qs.vo.resp.DecodeRespVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -21,20 +18,20 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Scope("prototype")
 @RequestMapping("/video")
-public class VideoDecode {
+public class DecodeHighVideo {
 
     @Autowired
     private VideoService videoService;
 
     /**
      * 视频解码转码
-     * @param decodeReqVO
+     * @param decodeHighReqVO
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/decode", method = { RequestMethod.POST })
-    public CommonRespVO videoDecode(@RequestBody DecodeReqVO decodeReqVO){
-        return videoService.decodeVideo(decodeReqVO);
+    @RequestMapping(value = "/decode/high", method = { RequestMethod.POST })
+    public CommonRespVO decode(@RequestBody DecodeHighReqVO decodeHighReqVO){
+        return videoService.decodeHighVideo(decodeHighReqVO);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.qs.dto.config;
+package com.qs.dto.config.ffmpeg;
 
 import com.qs.vo.req.LiveReqVO;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+
+import java.io.Serializable;
 
 /**
  * FFmpeg推流配置
@@ -16,7 +18,7 @@ import org.apache.commons.lang.StringUtils;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LiveffmpegDTO extends BaseffmpegDTO {
+public class LiveOnlineDTO implements Serializable {
 
     /**
      * ffmpeg 路径
@@ -69,11 +71,11 @@ public class LiveffmpegDTO extends BaseffmpegDTO {
      * @param ffmpegPath
      * @return
      */
-    public static LiveffmpegDTO getInstanceOf(LiveReqVO liveReqVO, String ffmpegPath) {
+    public static LiveOnlineDTO getInstanceOf(LiveReqVO liveReqVO, String ffmpegPath) {
         if(liveReqVO == null || StringUtils.isBlank(ffmpegPath)){
             return null;
         }
-        return LiveffmpegDTO.builder()
+        return LiveOnlineDTO.builder()
                 .ffmpegPath(ffmpegPath)
                 .input(liveReqVO.getInput())
                 .output(liveReqVO.getOutput())

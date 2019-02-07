@@ -1,9 +1,8 @@
 package com.qs.service;
 
-import com.qs.dto.config.LiveffmpegDTO;
-import com.qs.vo.req.DecodeReqVO;
-import com.qs.vo.resp.DecodeRespVO;
-import com.qs.vo.resp.LiveRespVO;
+import com.qs.dto.config.ffmpeg.LiveOnlineDTO;
+import com.qs.vo.req.DecodeHighReqVO;
+import com.qs.vo.req.DecodeSimpleReqVO;
 import com.qs.vo.req.VideoReqVO;
 import com.qs.vo.resp.CommonRespVO;
 
@@ -34,18 +33,26 @@ public interface VideoService {
     List<CommonRespVO> findList(VideoReqVO videoReqVO);
 
     /**
-     * 视频解码转码
+     * 普清视频转码
      *
-     * @param decodeReqVO
+     * @param decodeSimpleReqVO
      * @return
      */
-    CommonRespVO decodeVideo(DecodeReqVO decodeReqVO);
+    CommonRespVO decodeSimpleVideo(DecodeSimpleReqVO decodeSimpleReqVO);
+
+    /**
+     * 高清视频转码
+     *
+     * @param decodeHighReqVO
+     * @return
+     */
+    CommonRespVO decodeHighVideo(DecodeHighReqVO decodeHighReqVO);
 
     /**
      * 直播推流
      *
-     * @param liveffmpegDTO
+     * @param liveOnlineDTO
      * @return
      */
-    CommonRespVO livePushStream(LiveffmpegDTO liveffmpegDTO);
+    CommonRespVO livePushStream(LiveOnlineDTO liveOnlineDTO);
 }

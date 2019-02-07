@@ -1,4 +1,4 @@
-package com.qs.controller;
+package com.qs.controller.video;
 
 import com.google.common.collect.Lists;
 import com.qs.dto.common.DataTableDTO;

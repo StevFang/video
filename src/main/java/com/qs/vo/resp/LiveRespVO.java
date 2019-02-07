@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LiveRespVO {
 
+    private String liveLog;
+
     private String output;
 
 }
