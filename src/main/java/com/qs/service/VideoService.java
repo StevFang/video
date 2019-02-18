@@ -19,7 +19,7 @@ public interface VideoService {
     /**
      * 获取视频总数量
      *
-     * @param videoReqVO
+     * @param videoReqVO 请求入参
      * @return
      */
     int findCount(VideoReqVO videoReqVO);
@@ -27,23 +27,23 @@ public interface VideoService {
     /**
      * 获取视频列表
      *
-     * @param videoReqVO
+     * @param videoReqVO 请求入参
      * @return
      */
     List<CommonRespVO> findList(VideoReqVO videoReqVO);
 
     /**
-     * 普清视频转码
+     * 视频转普清码
      *
-     * @param decodeSimpleReqVO
+     * @param decodeSimpleReqVO 视频转普清码请求参数
      * @return
      */
     CommonRespVO decodeSimpleVideo(DecodeSimpleReqVO decodeSimpleReqVO);
 
     /**
-     * 高清视频转码
+     * 视频转高清码
      *
-     * @param decodeHighReqVO
+     * @param decodeHighReqVO 视频转高清码请求参数
      * @return
      */
     CommonRespVO decodeHighVideo(DecodeHighReqVO decodeHighReqVO);
@@ -51,7 +51,7 @@ public interface VideoService {
     /**
      * 直播推流
      *
-     * @param liveOnlineDTO
+     * @param liveOnlineDTO 视频直播点播DTO
      * @return
      */
     CommonRespVO livePushStream(LiveOnlineDTO liveOnlineDTO);

@@ -24,8 +24,8 @@ public class DecodeHighVideo {
     private VideoService videoService;
 
     /**
-     * 视频解码转码
-     * @param decodeHighReqVO
+     * 视频高清转码
+     * @param decodeHighReqVO 视频转高清码请求参数
      * @return
      */
     @ResponseBody

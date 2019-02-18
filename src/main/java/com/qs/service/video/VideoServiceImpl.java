@@ -52,108 +52,58 @@ public class VideoServiceImpl implements VideoService {
     @Autowired
     private DecodeHighCommandServiceImpl decodeHighCommandService;
 
-    /**
-     * 获取视频总数量
-     * @param videoReqVO
-     * @return
-     */
     @Override
     public int findCount(VideoReqVO videoReqVO) {
         return 0;
     }
 
-    /**
-     * 获取视频列表
-     * @param videoReqVO
-     * @return
-     */
     @Override
     public List<CommonRespVO> findList(VideoReqVO videoReqVO) {
         return Lists.newArrayList();
     }
 
-    /**
-     * 视频解码转码
-     *
-     * @param decodeSimpleReqVO
-     * @return
-     */
     @Override
     public CommonRespVO decodeSimpleVideo(DecodeSimpleReqVO decodeSimpleReqVO) {
         DecodeDTO decodeDTO = DecodeDTO.getInstanceOf(decodeSimpleReqVO, ffmpegPath, memcoderPath, savePath);
+        CommonRespVO commonRespVO = this.checkDecodeDTO(decodeDTO);
+        if(commonRespVO != null){
+            return commonRespVO;
+        }
         DecodeRespVO decodeRespVO;
-        // ffmpeg环境是否配置正确
-        if (decodeDTO == null) {
-            log.error("配置未正确加载，无法执行");
-            decodeRespVO = DecodeRespVO.builder()
-                    .videoId(decodeSimpleReqVO.getVideoId())
-                    .decodeLog("配置未正确加载，无法执行").build();
-            return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_DECODE_ERROR, decodeRespVO);
-        }
-        // 参数是否符合要求
-        if (StringUtils.isBlank(decodeDTO.getAppName())) {
-            log.error("参数不正确，无法执行");
-            decodeRespVO = DecodeRespVO.builder()
-                    .videoId(decodeSimpleReqVO.getVideoId())
-                    .decodeLog("参数不正确，无法执行").build();
-            return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_DECODE_ERROR, decodeRespVO);
-        }
         String decodeCommand = decodeSimpleCommandService.createCommand(decodeDTO);
         if(StringUtils.isNotBlank(decodeCommand)){
-            log.info("decode command => " + decodeCommand);
+            log.info("decode simple command => " + decodeCommand);
             decodeSimpleCommandService.decodeVideo(decodeDTO, decodeCommand);
-            decodeRespVO = DecodeRespVO.builder()
-                    .videoId(decodeSimpleReqVO.getVideoId())
-                    .decodeLog("正在处理中，请稍后").build();
+            decodeRespVO = DecodeRespVO.builder().videoId(decodeDTO.getVideoId()).decodeLog("正在处理中，请稍后").build();
             return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_DECODE_SUCCESS, decodeRespVO);
         }
         decodeRespVO = DecodeRespVO.builder()
                 .videoId(decodeSimpleReqVO.getVideoId())
-                .decodeLog("转码指令未获取到，无法执行").build();
+                .decodeLog("普清转码指令未获取到，无法执行").build();
         return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_DECODE_ERROR, decodeRespVO);
     }
 
     @Override
     public CommonRespVO decodeHighVideo(DecodeHighReqVO decodeHighReqVO) {
         DecodeDTO decodeDTO = DecodeDTO.getInstanceOf(decodeHighReqVO, ffmpegPath, memcoderPath, savePath);
+        CommonRespVO commonRespVO = this.checkDecodeDTO(decodeDTO);
+        if(commonRespVO != null){
+            return commonRespVO;
+        }
         DecodeRespVO decodeRespVO;
-        // ffmpeg环境是否配置正确
-        if (decodeDTO == null) {
-            log.error("配置未正确加载，无法执行");
-            decodeRespVO = DecodeRespVO.builder()
-                    .videoId(decodeHighReqVO.getVideoId())
-                    .decodeLog("配置未正确加载，无法执行").build();
-            return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_DECODE_ERROR, decodeRespVO);
-        }
-        // 参数是否符合要求
-        if (StringUtils.isBlank(decodeDTO.getAppName())) {
-            log.error("参数不正确，无法执行");
-            decodeRespVO = DecodeRespVO.builder()
-                    .videoId(decodeHighReqVO.getVideoId())
-                    .decodeLog("参数不正确，无法执行").build();
-            return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_DECODE_ERROR, decodeRespVO);
-        }
         String decodeCommand = decodeHighCommandService.createCommand(decodeDTO);
         if(StringUtils.isNotBlank(decodeCommand)){
-            log.info("decode command => " + decodeCommand);
+            log.info("decode high command => " + decodeCommand);
             decodeHighCommandService.decodeVideo(decodeDTO, decodeCommand);
-            decodeRespVO = DecodeRespVO.builder()
-                    .videoId(decodeHighReqVO.getVideoId())
-                    .decodeLog("正在处理中，请稍后").build();
+            decodeRespVO = DecodeRespVO.builder().videoId(decodeDTO.getVideoId()).decodeLog("正在处理中，请稍后").build();
             return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_DECODE_SUCCESS, decodeRespVO);
         }
         decodeRespVO = DecodeRespVO.builder()
                 .videoId(decodeHighReqVO.getVideoId())
-                .decodeLog("转码指令未获取到，无法执行").build();
+                .decodeLog("高清转码指令未获取到，无法执行").build();
         return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_DECODE_ERROR, decodeRespVO);
     }
 
-    /**
-     * 直播推流
-     *
-     * @param liveOnlineDTO
-     * @return
-     */
     @Override
     public CommonRespVO livePushStream(LiveOnlineDTO liveOnlineDTO) {
         String liveOnlineCommand = liveOnlineCommandService.createCommand(liveOnlineDTO);
@@ -173,6 +123,33 @@ public class VideoServiceImpl implements VideoService {
                     .build();
             return CommonUtils.getCommonRespVO(VideoCodeEnum.LIVE_ERROR, data);
         }
+    }
+
+    /**
+     * 校验视频转码参数
+     *
+     * @param decodeDTO 视频转码参数
+     * @return
+     */
+    private CommonRespVO checkDecodeDTO(DecodeDTO decodeDTO){
+        DecodeRespVO decodeRespVO;
+        // ffmpeg环境是否配置正确
+        if (decodeDTO == null) {
+            log.error("配置未正确加载，无法执行");
+            decodeRespVO = DecodeRespVO.builder()
+                    .videoId(decodeDTO.getVideoId())
+                    .decodeLog("配置未正确加载，无法执行").build();
+            return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_DECODE_ERROR, decodeRespVO);
+        }
+        // 参数是否符合要求
+        if (StringUtils.isBlank(decodeDTO.getAppName())) {
+            log.error("参数不正确，无法执行");
+            decodeRespVO = DecodeRespVO.builder()
+                    .videoId(decodeDTO.getVideoId())
+                    .decodeLog("参数不正确，无法执行").build();
+            return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_DECODE_ERROR, decodeRespVO);
+        }
+        return null;
     }
 
 }
