@@ -138,7 +138,7 @@ public class VideoServiceImpl implements VideoService {
             playVideoCommandService.playVideo(liveOnlineDTO, playVideoCommand);
             data = LiveRespVO.builder()
                     .liveLog("点播推流成功")
-                    .output("rtmp://127.0.0.1/video/" + liveOnlineDTO.getOutput())
+                    .output("rtmp://localhost:1935/live/stream")
                     .build();
             return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_PLAYING_SUCCESS, data);
         }else{

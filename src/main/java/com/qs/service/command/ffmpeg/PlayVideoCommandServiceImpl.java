@@ -26,7 +26,7 @@ public class PlayVideoCommandServiceImpl implements CommandService<LiveOnlineDTO
     @Autowired
     private CommandCommonService commandCommonService;
 
-    // ffmpeg -re -i pm.mp4 -acodec copy -vcodec copy -f flv rtmp://127.0.0.1/rh/mylive
+    // ffmpeg -re -i C:\Users\Administrator\Desktop\snooker.mp4 -vcodec libx264 -acodec libvo_aacenc -f flv rtmp://localhost:12345/live/room
     @Override
     public String createCommand(LiveOnlineDTO liveOnlineDTO) {
         try{
@@ -34,17 +34,13 @@ public class PlayVideoCommandServiceImpl implements CommandService<LiveOnlineDTO
             String fastForwardMPEGPath = liveOnlineDTO.getFfmpegPath();
             if(StringUtils.isNotBlank(fastForwardMPEGPath)){
                 command.append(fastForwardMPEGPath).append(" ");
-                command.append("-re").append(" ");
-                command.append("-i").append(" ");
+                command.append("-re ");
+                command.append("-i ");
                 command.append(liveOnlineDTO.getInput()).append(" ");
-                command.append("-acodec").append(" ");
-                command.append("copy").append(" ");
-                command.append("-vcodec").append(" ");
-                command.append("copy").append(" ");
-                command.append("-f").append(" ");
-                command.append("flv").append(" ");
-                command.append("rtmp://127.0.0.1/video/");
-                command.append(liveOnlineDTO.getOutput());
+                command.append("-vcodec libx264 ");
+                command.append("-acodec libshine ");
+                command.append("-f flv ");
+                command.append("rtmp://localhost:1935/live/stream");
             }
             return command.toString();
         }catch (Exception e){
