@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Scope("prototype")
 @RequestMapping("/video")
-public class LiveOnlineVideo {
+public class LiveVideo {
 
     @Value("${server.ffmpeg.path}")
     private String ffmpegPath;

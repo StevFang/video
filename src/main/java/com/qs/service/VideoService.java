@@ -51,8 +51,16 @@ public interface VideoService {
     /**
      * 直播推流
      *
-     * @param liveOnlineDTO 视频直播点播DTO
+     * @param liveOnlineDTO 视频直播DTO
      * @return
      */
     CommonRespVO livePushStream(LiveOnlineDTO liveOnlineDTO);
+
+    /**
+     * 点播推流
+     *
+     * @param liveOnlineDTO 视频点播DTO
+     * @return
+     */
+    CommonRespVO playPushStream(LiveOnlineDTO liveOnlineDTO);
 }

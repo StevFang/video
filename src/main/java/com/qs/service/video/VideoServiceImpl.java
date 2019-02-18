@@ -8,6 +8,7 @@ import com.qs.service.VideoService;
 import com.qs.service.command.ffmpeg.DecodeHighCommandServiceImpl;
 import com.qs.service.command.ffmpeg.DecodeSimpleCommandServiceImpl;
 import com.qs.service.command.ffmpeg.LiveOnlineCommandServiceImpl;
+import com.qs.service.command.ffmpeg.PlayVideoCommandServiceImpl;
 import com.qs.utils.CommonUtils;
 import com.qs.vo.req.DecodeHighReqVO;
 import com.qs.vo.req.DecodeSimpleReqVO;
@@ -45,6 +46,9 @@ public class VideoServiceImpl implements VideoService {
 
     @Autowired
     private LiveOnlineCommandServiceImpl liveOnlineCommandService;
+
+    @Autowired
+    private PlayVideoCommandServiceImpl playVideoCommandService;
 
     @Autowired
     private DecodeSimpleCommandServiceImpl decodeSimpleCommandService;
@@ -109,19 +113,40 @@ public class VideoServiceImpl implements VideoService {
         String liveOnlineCommand = liveOnlineCommandService.createCommand(liveOnlineDTO);
         LiveRespVO data;
         if(StringUtils.isNotBlank(liveOnlineCommand)){
-            log.info("live command => " + liveOnlineCommand);
+            log.info("live video push to server command => " + liveOnlineCommand);
             liveOnlineCommandService.liveOnlineVideo(liveOnlineDTO, liveOnlineCommand);
             data = LiveRespVO.builder()
-                    .liveLog("推流成功")
+                    .liveLog("直播推流成功")
                     .output(liveOnlineDTO.getOutput() + liveOnlineDTO.getAppName())
                     .build();
-            return CommonUtils.getCommonRespVO(VideoCodeEnum.LIVE_SUCCESS, data);
+            return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_LIVE_SUCCESS, data);
         }else{
             data = LiveRespVO.builder()
-                    .liveLog("推流失败，推流指令未获取到，无法执行")
+                    .liveLog("直播推流失败，推流指令未获取到，无法执行")
                     .output("")
                     .build();
-            return CommonUtils.getCommonRespVO(VideoCodeEnum.LIVE_ERROR, data);
+            return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_LIVE_ERROR, data);
+        }
+    }
+
+    @Override
+    public CommonRespVO playPushStream(LiveOnlineDTO liveOnlineDTO) {
+        String playVideoCommand = playVideoCommandService.createCommand(liveOnlineDTO);
+        LiveRespVO data;
+        if(StringUtils.isNotBlank(playVideoCommand)){
+            log.info("play video push to server command => " + playVideoCommand);
+            playVideoCommandService.playVideo(liveOnlineDTO, playVideoCommand);
+            data = LiveRespVO.builder()
+                    .liveLog("点播推流成功")
+                    .output("rtmp://127.0.0.1/video/" + liveOnlineDTO.getOutput())
+                    .build();
+            return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_PLAYING_SUCCESS, data);
+        }else{
+            data = LiveRespVO.builder()
+                    .liveLog("点播推流失败，推流指令未获取到，无法执行")
+                    .output("")
+                    .build();
+            return CommonUtils.getCommonRespVO(VideoCodeEnum.VIDEO_PLAYING_ERROR, data);
         }
     }
 

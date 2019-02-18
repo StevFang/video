@@ -92,7 +92,7 @@ public class LiveOnlineCommandServiceImpl implements CommandService<LiveOnlineDT
     }
 
     /**
-     * 视频转码
+     * 视频推送到流媒体服务器
      *
      * @param liveOnlineDto
      * @param liveOnlineCommand
