@@ -26,7 +26,7 @@ public class PlayVideoCommandServiceImpl implements CommandService<LiveOnlineDTO
     @Autowired
     private CommandCommonService commandCommonService;
 
-    // ffmpeg -re -i C:\Users\Administrator\Desktop\snooker.mp4 -vcodec libx264 -acodec libvo_aacenc -f flv rtmp://localhost:12345/live/room
+    // ffmpeg -re -i C:\Users\Administrator\Desktop\snooker.mp4 -vcodec libx264 -acodec libvo_aacenc -f flv rtmp://localhost:1935/live/room
     @Override
     public String createCommand(LiveOnlineDTO liveOnlineDTO) {
         try{
@@ -40,7 +40,8 @@ public class PlayVideoCommandServiceImpl implements CommandService<LiveOnlineDTO
                 command.append("-vcodec libx264 ");
                 command.append("-acodec libshine ");
                 command.append("-f flv ");
-                command.append("rtmp://localhost:1935/live/stream");
+                command.append("rtmp://localhost:1935/live/");
+                command.append(liveOnlineDTO.getOutput());
             }
             return command.toString();
         }catch (Exception e){
