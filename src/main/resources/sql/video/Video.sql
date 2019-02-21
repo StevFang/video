@@ -1,10 +1,8 @@
-create table DownloadRecord(
-	oid bigint primary key,
+create table video(
+  oid bigint primary key,
 	parentId bigint,
-	Code varchar(50),
+	OriginName varchar(50),
 	UploadRecordId bigint,
-	DownloadFlag varchar(1),
-	DownloadMsg varchar(200),
 	createdOn datetime,
 	createdBy bigint,
 	updatedOn datetime,
